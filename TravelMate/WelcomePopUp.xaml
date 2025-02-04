@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TravelMate.WelcomePopUp"
+             BackgroundColor="#7ea3ab">
+
+    <Grid VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+        <!-- Dark background to make it pop -->
+        <BoxView Color="#7ea3ab" />
+
+        <!-- Pop-up Content -->
+        <Frame BackgroundColor="#e1f5fa" Padding="25" CornerRadius="10" HasShadow="True" WidthRequest ="300" Margin ="60">
+            <StackLayout Spacing="15" HorizontalOptions="Center">
+                <!-- Welcome message -->
+                <Label Text="{Binding UserName}" FontSize="22" FontAttributes="Bold" TextColor="#7ea3ab"
+                       HorizontalOptions="Center" FontFamily ="sans-serif"/>
+
+                <!-- Instructional text -->
+                <Label Text="To start, let's add your first flight and hotel." FontSize="16" TextColor="Black"
+                       HorizontalOptions="Center" FontFamily ="sans-serif"/>
+
+                <!-- Step 1: Add Flight -->
+                <Label Text="Step 1: Add a Flight" FontSize="18" FontAttributes="Bold" TextColor="#333333"
+                       FontFamily ="sans-serif" HorizontalOptions="Center"/>
+
+                <Label Text="Enter flight number and departure date." FontSize="16" TextColor="Black"
+                       FontFamily ="sans-serif" HorizontalOptions="Center"/>
+
+                <!-- Step 2: Add Hotel -->
+                <Label Text="Step 2: Add a Hotel" FontSize="18" FontAttributes="Bold" TextColor="#333333"
+                       HorizontalOptions="Center" FontFamily ="sans-serif"/>
+
+                <Label Text="Enter hotel name and destination with check in/out dates" FontSize="16"
+                       TextColor="Black" HorizontalOptions="Center" FontFamily ="sans-serif"/>
+
+                <!-- Button to continue to the next page -->
+                <Button Text="Got it! Let's Add My First Flight &amp; Hotel" BackgroundColor="#7ea3ab"
+                        TextColor="White" FontAttributes="Bold" Clicked="OnStartAddingClicked"
+                        HorizontalOptions="Center" FontFamily ="sans-serif"/>
+            </StackLayout>
+        </Frame>
+    </Grid>
+</ContentPage>
