@@ -2,12 +2,13 @@
 
 namespace TravelMate.Models
 {
+    /// Represents a flight booking in the TravelMate application.
+    /// This model is used to store flight details in the local SQLite database.
     public class Flight
     {
         [PrimaryKey, AutoIncrement]
         public int FlightId { get; set; }
         public int UserId { get; set; }
-
         public string Airline {  get; set; }
         public string FlightNumber { get; set; }
         public string DepartureTime { get; set; }

@@ -2,6 +2,8 @@
 
 namespace TravelMate.Models
 {
+    /// Represents a user in the TravelMate application.
+    /// This model is used to store flight details in the local SQLite database.
     public class User
     {
         [PrimaryKey, AutoIncrement]

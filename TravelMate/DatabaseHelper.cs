@@ -1,7 +1,7 @@
 ﻿
 using SQLite;
 using TravelMate.Models;
-
+using System.Diagnostics;
 namespace TravelMate
 {
     public class DatabaseHelper
@@ -13,15 +13,20 @@ namespace TravelMate
             if (_database == null)
             {
                 // Get the path to the database file
-                var databasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "travelmate.db");
-
+                var databasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "travelmatedb.db");
                 // Create a new SQLite connection
                 _database = new SQLiteConnection(databasePath);
 
-
-                _database.CreateTable<User>();
-                _database.CreateTable<Flight>(); 
-                _database.CreateTable<Hotel>(); 
+                try
+                {
+                    _database.CreateTable<User>();
+                    _database.CreateTable<Flight>();
+                    _database.CreateTable<Hotel>();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error creating tables: {ex.Message}");
+                }
 
             }
             return _database;
@@ -29,7 +34,15 @@ namespace TravelMate
         public static async Task AddNewUser(User user)
         {
             var db = await GetDatabase();
-            db.Insert(user);
+            try
+            {
+                db.Insert(user);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error creating tables: {ex.Message}");
+            }
+
         }
 
         public static async Task<string> GetUserNameById(int userId)
@@ -47,6 +60,12 @@ namespace TravelMate
             }
 
             return userName;
+        }
+        public static async Task<bool> IsEmailExist(string email)
+        { 
+            var db = await GetDatabase();  // Use the async method to get the database connection
+            var user = db.Table<User>().FirstOrDefault(u => u.Email == email);  // Use async method for querying the table
+            return user != null;  // Return whether a user with that email exists
         }
 
         public static async Task AddFlight(Flight flight, int userId)

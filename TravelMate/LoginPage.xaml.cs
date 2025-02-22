@@ -3,9 +3,10 @@ using TravelMate.Models;
 
 namespace TravelMate
 {
-    //login page for new and exisiting user.
-    //flow is : new user -> welcome pop up -> NewFlightPage -> NewHotelPage ->HomePage
-    //exsiting user -> HomePage
+    /// Represents the login page for new and existing users.
+    /// Flow:
+    /// - New user: Displays welcome popup -> Navigates to NewFlightPage -> NewHotelPage -> HomePage
+    /// - Existing user: Navigates directly to HomePage
     public partial class LoginPage : ContentPage
     {
         public LoginPage()
@@ -13,26 +14,32 @@ namespace TravelMate
             InitializeComponent();
         }
 
+        /// Handles the login button click event.
+        /// Retrieves user input for email and password.
         private void OnLoginClicked(object sender, EventArgs e)
         {
             var email = EmailEntry.Text;
             var password = PasswordEntry.Text;
 
-
+            // TODO: Implement second auth
 
         }
 
+        /// Handles the "Sign Up"  tap event.
         private void OnSignUpTapped(object sender, EventArgs e)
         {
             LoginForm.IsVisible = false;
             SignUpForm.IsVisible = true;
         }
 
+        /// Handles the "ForgotPassword"  tap event.
         private void OnForgotPasswordTapped(object sender, EventArgs e)
         {
-            // Navigate to Forgot Password Page
-            //Navigation.PushAsync(new ForgotPasswordPage());
+            // TODO: Implement navigation to Forgot Password Page
+            // Navigation.PushAsync(new ForgotPasswordPage());
         }
+        /// Handles the sign-up button click event.
+        /// Validates user input, registers a new user, and navigates to NewFlightPage .
         private async void OnSignUpClicked(object sender, EventArgs e)
         {
             var name = UsernameEntry.Text;
@@ -43,15 +50,21 @@ namespace TravelMate
             string errorMessage = ValidationHelper.UserValidation(email, password, confirmPassword);
             if (!string.IsNullOrEmpty(errorMessage))
             {
-                await DisplayAlert("Error", errorMessage, "OK");
+                await DisplayAlert("Error", "errorMessage", "OK");
                 return;
             }
+            bool exist = await DatabaseHelper.IsEmailExist(email);
+            if (exist)
+            {
+                await DisplayAlert("Error", "email already exist", "OK");
+                return;
+            }
+
             var newUser = new User
             {
                 Name = name,
                 Email = email,
                 Password = password,
-                PhoneNumber = null
             };
             DatabaseHelper.AddNewUser(newUser);
             var userID = newUser.Id;
@@ -59,7 +72,7 @@ namespace TravelMate
             var popup = new WelcomePopUp(userID);
             await Navigation.PushModalAsync(popup);
 
-            await Navigation.PushAsync(new NewHotelPage(userID));
+            await Navigation.PushAsync(new NewFlightPage(userID));
 
         }
     }

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using Microsoft.Maui.Controls;
 using TravelMate.Models;
 using TravelMate.Services;
+using Android.Hardware.Lights;
 
 namespace TravelMate
 {
@@ -35,17 +36,27 @@ namespace TravelMate
             }
             var checkIn = CheckInDatePicker.Date.ToString("yyyy-MM-dd");
             var checkOut = CheckOutDatePicker.Date.ToString("yyyy-MM-dd");
-            string hotelAndCity = $"{hotelName} {city}";
-            var hotelDetailsList = await HotelService.GetHotelDetailsAsync(hotelName, checkIn, checkOut);
+            string hotelSearch = $"{hotelName} {city}";
+            var hotelDetailsList = await HotelService.GetHotelDetailsAsync(hotelSearch, checkIn, checkOut);
             if (hotelDetailsList != null && hotelDetailsList.Count > 0)
             {
                 var hotel = hotelDetailsList[0]; // Take the first hotel
 
                 HotelResultStack.IsVisible = true;
-                HotelNameLabel.Text = hotel.HotelName;
-                HotelAddressLabel.Text = hotel.Address;
-                HotelRatingLabel.Text = $"Rating: {hotel.Rate}/5";
-                HotelPhoneLabel.Text = $"Phone: {hotel.Phone}";
+                NameLabel.Text = hotel.HotelName;
+                AddressLabel.Text = hotel.Address;
+                HotelClassLabel.Text = hotel.HotelClass.ToString();
+                PhoneLabel.Text = $"Phone: {hotel.Phone}";
+                LatitudeLabel.Text = hotel.Latitude.ToString();
+                LongitudeLabel.Text = hotel.Longitude.ToString();
+                NearbyPlacesLabel.Text = hotel.NearbyPlaces;
+                HotelAmenitiesLabel.Text = string.Join(", ", hotel.Amenities);
+                Star1.IsVisible = hotel.HotelClass >= 1;
+                Star2.IsVisible = hotel.HotelClass >= 2;
+                Star3.IsVisible = hotel.HotelClass >= 3;
+                Star4.IsVisible = hotel.HotelClass >= 4;
+                Star5.IsVisible = hotel.HotelClass >= 5;
+
 
                 if (!string.IsNullOrEmpty(hotel.LogoUrl))
                 {
@@ -57,6 +68,45 @@ namespace TravelMate
             {
                 await DisplayAlert("No Results", "No hotels found matching your criteria.", "OK");
             }
+
+        }
+
+        private async void OnHotelTapped(object sender, EventArgs e)
+        {
+            var answer = await DisplayAlert("Add Hotel", "Do you want to add this Hotel to your trip?", "Yes", "No");
+            if (answer)
+            {
+                var hotel = new Hotel
+                {
+                    UserId = UserId,
+                    HotelName = NameLabel.Text,
+                    Address = AddressLabel.Text,
+                    Phone = PhoneLabel.Text.Replace("Phone: ", ""),
+                    CheckInDate = CheckInDatePicker.Date.ToString("yyyy-MM-dd"),
+                    CheckOutDate = CheckOutDatePicker.Date.ToString("yyyy-MM-dd"),
+                    LogoUrl = HotelImage.Source.ToString(),
+                    Class = int.TryParse(HotelClassLabel.Text, out var hotelClass) ? hotelClass : 1,
+                    NearbyPlaces = NearbyPlacesLabel.Text.Replace("Nearby: ", ""),
+                    Latitude = double.TryParse(LatitudeLabel.Text, out var lat) ? lat : 0.0,
+                    Longitude = double.TryParse(LongitudeLabel.Text, out var lon) ? lon : 0.0,
+                    Amenities = HotelAmenitiesLabel.Text,
+
+                };
+                DatabaseHelper.AddHotel(hotel, UserId);
+                await DisplayAlert("Success", "Hotel added to your trip!", "OK");
+                bool addAnotherHotel = await DisplayAlert("Add Another Hotel?", "Do you want to add another Hotel?", "Yes", "No");
+                if(addAnotherHotel)
+                {
+                    NameLabel.Text = string.Empty;
+                    CityEntry.Text = string.Empty;
+                    CheckInDatePicker.Date = DateTime.Now;
+                    CheckOutDatePicker.Date = DateTime.Now;
+
+
+                }
+            }
+            // TODO: fix data colors and show full address
+
 
         }
     }

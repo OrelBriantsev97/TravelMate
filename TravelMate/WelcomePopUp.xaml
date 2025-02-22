@@ -2,15 +2,15 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TravelMate.WelcomePopUp"
-             BackgroundColor="#7ea3ab">
+              Background="#7ea3ab">
 
     <Grid VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
         <!-- Dark background to make it pop -->
-        <BoxView Color="#7ea3ab" />
+       <!-- <BoxView Color="#7ea3ab" /> -->
 
         <!-- Pop-up Content -->
-        <Frame BackgroundColor="#e1f5fa" Padding="25" CornerRadius="10" HasShadow="True" WidthRequest ="300" Margin ="60">
-            <StackLayout Spacing="15" HorizontalOptions="Center">
+        <Frame BackgroundColor="#e1f5fa" Padding="25" CornerRadius="10" HasShadow="False" WidthRequest ="300" Margin ="60">
+            <StackLayout x:Name="WelcomeLayout" Spacing="15" HorizontalOptions="Center" >
                 <!-- Welcome message -->
                 <Label Text="{Binding UserName}" FontSize="22" FontAttributes="Bold" TextColor="#7ea3ab"
                        HorizontalOptions="Center" FontFamily ="sans-serif"/>

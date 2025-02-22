@@ -3,13 +3,20 @@ using Microsoft.Maui.Controls;
 using System.Globalization;
 using TravelMate.Models;
 using TravelMate.Services;
+using System.Diagnostics;
+
 
 namespace TravelMate
 {
     public partial class NewFlightPage : ContentPage
     {
         public int userId { get; set; }
-        private List<string> airportIds = new List<string>();
+        public class AirportItem // Create a class to hold the city name
+        {
+            public string CityName { get; set; }
+            public string FullString { get; set; } // Store the original string if needed
+        }
+        private List<AirportItem> airportItems;
 
         private readonly List<string> airportOptions = new List<string>
         {
@@ -24,9 +31,22 @@ namespace TravelMate
             InitializeComponent();
             NavigationPage.SetHasNavigationBar(this, false);
             userId = userID;
-            airportIds = new List<string>(airportOptions);
-            AirportListOrigin.ItemsSource = airportIds;
-            AirportListDest.ItemsSource = airportIds;
+            //  airportIds = new List<string>(airportOptions);
+            //AirportListOrigin.ItemsSource = airportIds;
+            //AirportListDest.ItemsSource = airportIds;
+            airportItems = airportOptions.Select(option =>
+            {
+                var parts = option.Split(" - ");
+                return new AirportItem
+                {
+                    CityName = parts[0], // City name
+                    FullString = option // The whole string
+                };
+            }).ToList();
+
+            AirportListOrigin.ItemsSource = airportItems; // Set the ItemSource to the new list
+            AirportListDest.ItemsSource = airportItems;
+
         }
 
         private async void OnSearchFlightClicked(object sender, EventArgs e)
@@ -36,7 +56,7 @@ namespace TravelMate
             var origin = ExtractAirportCode(OriginEntry.Text);
             var destination = ExtractAirportCode(DestinationEntry.Text);
                     
-            string errorMessage = ValidationHelper.validateFlightEntries(flightNumber, origin, destination);
+            string errorMessage = ValidationHelper.ValidateFlightEntries(flightNumber, origin, destination);
             if (!string.IsNullOrEmpty(errorMessage))
             {
                 await DisplayAlert("Error", errorMessage, "OK");
@@ -96,6 +116,24 @@ namespace TravelMate
                 };
                 DatabaseHelper.AddFlight(flight, userId);
                 await DisplayAlert("Success", "Flight added to your trip!", "OK");
+                bool addAnotherFlight = await DisplayAlert("Add Another Flight?", "Do you want to add another flight?", "Yes", "No");
+
+                if (addAnotherFlight)
+                {
+                    FlightNumberEntry.Text = string.Empty;
+                    DepartureDatePicker.Date = DateTime.Now;
+
+                    OriginEntry.Text = string.Empty;
+                    DestinationEntry.Text = string.Empty;
+
+                    AirportListOrigin.IsVisible = false;
+                    AirportListDest.IsVisible = false;
+                }
+                else
+                {
+                    await Navigation.PushAsync(new NewHotelPage(userId));
+                }
+
 
             }
             await Navigation.PushAsync(new NewHotelPage(userId));
@@ -109,7 +147,7 @@ namespace TravelMate
             // Extract departure time
             if (DateTime.TryParse(flight.Departure?.Time, out departureDateTime))
             {
-                DepartureTimeLabel.Text = departureDateTime.ToString("hh:mm tt", CultureInfo.InvariantCulture);
+                DepartureTimeLabel.Text = departureDateTime.ToString("HH:mm", CultureInfo.InvariantCulture);
                 DepartureDateLabel.Text = departureDateTime.ToString("yyyy-MM-dd"); // Only show date
             }
             else
@@ -121,7 +159,7 @@ namespace TravelMate
             // Extract arrival time
             if (DateTime.TryParse(flight.Arrival?.Time, out arrivalDateTime))
             {
-                ArrivalTimeLabel.Text = arrivalDateTime.ToString("hh:mm tt", CultureInfo.InvariantCulture);
+                ArrivalTimeLabel.Text = arrivalDateTime.ToString("HH:mm", CultureInfo.InvariantCulture);
                 ArrivalDateLabel.Text = arrivalDateTime.ToString("yyyy-MM-dd"); // Only show date
             }
             else
@@ -158,52 +196,68 @@ namespace TravelMate
 
         private void OnAirportSearchTextChanged(object sender, TextChangedEventArgs e)
         {
-            var entry = sender as Entry;
-            if (entry != null)
+            var searchText = ((Entry)sender).Text.ToLower();
+            ListView listView;
+
+            if (sender == OriginEntry)
             {
-                string searchText = entry.Text.ToLower();
+                listView = AirportListOrigin;
+            }
+            else
+            {
+                listView = AirportListDest;
+            }
 
-                // Filter airports based on search text
-                var filteredAirports = airportOptions
-                    .Where(a => a.ToLower().Contains(searchText))
-                    .ToList();
-
-                // Show suggestions for the relevant entry
-                if (entry == OriginEntry)
-                {
-                    AirportListOrigin.ItemsSource = filteredAirports;
-                    AirportListOrigin.IsVisible = !string.IsNullOrEmpty(searchText);
-                }
-                else if (entry == DestinationEntry)
-                {
-                    AirportListDest.ItemsSource = filteredAirports;
-                    AirportListDest.IsVisible = !string.IsNullOrEmpty(searchText);
-                }
+            if (!string.IsNullOrEmpty(searchText))
+            {
+                // Filter the airportItems list, not airportOptions
+                listView.ItemsSource = airportItems.Where(item => item.CityName.ToLower().Contains(searchText) || item.FullString.ToLower().Contains(searchText)).ToList();
+                listView.IsVisible = true;
+            }
+            else
+            {
+                listView.ItemsSource = airportItems; // Reset to the full list when search is cleared
+                listView.IsVisible = false;
             }
         }
 
         private void OnAirportSelected(object sender, SelectedItemChangedEventArgs e)
         {
-            // Handle airport selection
-            if (e.SelectedItem != null)
-            {
-                var selectedAirport = e.SelectedItem.ToString();
+            if (e.SelectedItem == null) return;
 
-                // Set the selected airport to the corresponding entry
-                if (sender == AirportListOrigin)
-                {
-                    OriginEntry.Text = selectedAirport;
-                    AirportListOrigin.IsVisible = false;
-                }
-                else if (sender == AirportListDest)
-                {
-                    DestinationEntry.Text = selectedAirport;
-                    AirportListDest.IsVisible = false;
-                }
+            var selectedAirport = (AirportItem)e.SelectedItem;
+
+            // Update the corresponding Entry field with the selected airport
+            if (sender == AirportListOrigin)
+            {
+                OriginEntry.Text = selectedAirport.FullString;
+                AirportListOrigin.IsVisible = false; // Hide the list
+                OriginEntry.Unfocus();
             }
+            else if (sender == AirportListDest)
+            {
+                DestinationEntry.Text = selectedAirport.FullString;
+                AirportListDest.IsVisible = false;
+                DestinationEntry.Unfocus();
+            }
+
+        // Close the list view
+            ((ListView)sender).IsVisible = false;
+
         }
 
+        private void OnOriginFocused(object sender, FocusEventArgs e)
+        {
+            AirportListOrigin.IsVisible = true;  // Show the origin airport list
+            AirportListDest.IsVisible = false;   // Hide the destination airport list
+        }
 
+        // When the Destination Entry is focused
+        private void OnDestinationFocused(object sender, FocusEventArgs e)
+        {
+            AirportListDest.IsVisible = true;    // Show the destination airport list
+            AirportListOrigin.IsVisible = false; // Hide the origin airport list
+        }
 
 
         private async void OnHelpClicked(object sender, EventArgs e)

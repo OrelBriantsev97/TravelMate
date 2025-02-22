@@ -7,14 +7,19 @@ using System.Threading.Tasks;
 
 namespace TravelMate
 {
+    // Provides validation utilities for user input.
     public static class ValidationHelper
     {
-        //validator for user entry , return null if pass all valdiation
-
+        /// Validates user registration input.
+        /// Ensures that all fields are filled, the password meets security criteria, and passwords match. <summary>
+        /// <param name="email"> is The user's email</param>
+        /// <param name="pass">The user's password.</param>
+        /// <param name="conpass">The password confirmation.</param>
+        /// <returns>error msg if validation fails , else return null </returns>
         public static string UserValidation(string email, string pass, string conpass)
         {
             //checks if email and pass are not empty
-            if (!isEntryValid(email) || !isEntryValid(pass) || !isEntryValid(conpass))
+            if (!IsEntryValid(email) || !IsEntryValid(pass) || !IsEntryValid(conpass))
             {
                 return "Please fill in all fields";
             }
@@ -28,30 +33,40 @@ namespace TravelMate
             {
                 return "Passwords do not match";
             }
-
             return null; // Return null if all validations pass
         }
 
-        public static string validateFlightEntries(string flightNumber,string origin,string destination)
+        /// Validates user input when entering flight details.
+        /// Ensures the flight number, origin, and destination are provided.
+        /// <param name="flightNumber">The flight number entered by the user.</param>
+        /// <param name="origin">The selected origin airport.</param>
+        /// <param name="destination">The selected destination airport.</param>
+        /// <returns>
+        /// Returns an error message if validation fails.else,returns null.
+        /// </returns>
+        public static string ValidateFlightEntries(string flightNumber,string origin,string destination)
         {
-            if (!isEntryValid(flightNumber))
+            if (!IsEntryValid(flightNumber))
             {
                 return  "Please enter a valid flight number";
 
             }
-            if (!isEntryValid(origin))
+            if (!IsEntryValid(origin))
             {
                 return "Please select an origin";
             }
-            if (!isEntryValid(destination))
+            if (!IsEntryValid(destination))
             {
                 return "Please select destination";
             }
 
             return null;
         }
-        // checks if password contains at least 1 digit and 1 letter and 8 char long
-        // if password valid return true
+
+        /// Checks whether a given password meets security standards.
+        /// The password must be at least 8 characters long and contain at least one number and one letter.
+        /// <param name="password">The password string to validate.</param>
+        /// <returns>Returns true if the password is valid; otherwise, false.</returns>
         public static bool IsPasswordValid(string password)
         {
             if (string.IsNullOrWhiteSpace(password)) return false;
@@ -63,8 +78,10 @@ namespace TravelMate
             return hasMinimum8Chars && hasNumber && hasLetter;
         }
 
-        //check if entry is null or space,return true if entry is valid
-        public static bool isEntryValid(string entry)
+        /// Validates a user entry to ensure it is not null, empty, or whitespace.
+        /// <param name="entry">The input string to validate.</param>
+        /// <returns>Returns true if the entry is valid; otherwise, false.</returns>
+        public static bool IsEntryValid(string entry)
         {
             if (string.IsNullOrWhiteSpace(entry))
             {

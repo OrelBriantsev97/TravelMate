@@ -8,24 +8,22 @@
     <Grid RowDefinitions="Auto, *" Padding="10">
 
         <!-- Welcome Header and subheader -->
-        <Frame Grid.Row="0" Padding="0" CornerRadius="0" HasShadow="False" BackgroundColor="#C1ECF5" BorderColor="Transparent">
-            <StackLayout Orientation="Vertical" Spacing="15" HorizontalOptions="Center">
-                <Image Source="mainlogo.png" WidthRequest="300" HeightRequest="300" VerticalOptions="Center" BackgroundColor="Transparent" Margin="0,-100,0,-50"/>
-
-                
-                <Label Text="Welcome, Travelers! 🌍" FontSize="22" FontAttributes="Bold" TextColor="#7ea3ab"
+        <Frame Grid.Row="0" CornerRadius="0" HasShadow="False" BackgroundColor="#C1ECF5" BorderColor="Transparent">
+            <StackLayout Orientation="Vertical" Spacing="5" HorizontalOptions="Center">
+                <Image Source="mainlogo.png" WidthRequest="300" HeightRequest="300" VerticalOptions="Center" BackgroundColor="Transparent" Margin="0,-50,0,-60"/>
+                <Label Text="Welcome, Travelers! 🌍" FontSize="26" FontAttributes="Bold" TextColor="#7ea3ab"
 					   FontFamily ="sans-serif" HorizontalOptions="Center"/>
 
-                <Label Text="Let’s get your journey organized!" FontSize="16" TextColor="#3b6069"
-                       FontFamily ="sans-serif" HorizontalOptions="Center"/>
+                <Label Text="Let’s get your journey organized!" FontSize="18" TextColor="#3b6069"
+                       FontFamily ="sans-serif" HorizontalOptions="Center" Padding="10" Margin="0,0,0,60"/>
             </StackLayout>
         </Frame>
 		
         <!-- Login Form-->
-        <StackLayout x:Name="LoginForm" Grid.Row="1" Spacing="15" VerticalOptions="Center">
+        <StackLayout x:Name="LoginForm" Grid.Row="1" Spacing="15" VerticalOptions="Start">
             <!-- Email entry -->
-            <Frame BackgroundColor="White" CornerRadius="10" Padding="10" HasShadow="True">
-                <StackLayout Orientation="Horizontal" Spacing="10">
+            <Frame BackgroundColor="White" CornerRadius="10" Padding="5" HasShadow="True">
+                <StackLayout Orientation="Horizontal" Spacing="5">
                     <Image Source="email_icon.png" WidthRequest="25" HeightRequest="25" VerticalOptions="Center"/>
                     <Entry x:Name="EmailEntry" Placeholder="Enter your email" Keyboard="Email" FontSize="16" 
                TextColor="#333333" FontFamily ="sans-serif" PlaceholderColor="#888888"/>
@@ -33,8 +31,8 @@
             </Frame>
 
             <!-- Password entry-->
-            <Frame BackgroundColor="White" CornerRadius="10" Padding="10" HasShadow="True">
-                <StackLayout Orientation="Horizontal" Spacing="10">
+            <Frame BackgroundColor="White" CornerRadius="10" Padding="5" HasShadow="True">
+                <StackLayout Orientation="Horizontal" Spacing="5">
                     <Image Source="password_icon.png" WidthRequest="25" HeightRequest="25" VerticalOptions="Center"/>
                     <Entry x:Name="PasswordEntry" Placeholder="Enter your password" IsPassword="True" FontSize="16" 
                             TextColor="#333333" FontFamily ="sans-serif" PlaceholderColor="#888888"/>
@@ -49,14 +47,14 @@
                 FontFamily ="sans-serif" CornerRadius="10" HeightRequest="50"/>
 
             <!-- Sign-Up Link -->
-            <Label Text="Don't have an account? Sign up here"  TextColor="Black"  FontSize="14" FontFamily ="sans-serif" HorizontalOptions="Center">
+            <Label Text="Don't have an account? Sign up here"  TextColor="Black"  FontSize="16" FontFamily ="sans-serif" HorizontalOptions="Center">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer Tapped="OnSignUpTapped"/>
                 </Label.GestureRecognizers>
             </Label>
 
             <!-- Forgot Password Link -->
-            <Label Text="Forgot password?"  TextColor="Black" FontSize="14" FontFamily ="sans-serif" HorizontalOptions="Center">
+            <Label Text="Forgot password?"  TextColor="Black" FontSize="16" FontFamily ="sans-serif" HorizontalOptions="Center">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer Tapped="OnForgotPasswordTapped"/>
                 </Label.GestureRecognizers>
@@ -64,42 +62,42 @@
         </StackLayout>
 
         <!-- Sign-Up Email Entry -->
-        <StackLayout x:Name="SignUpForm" Grid.Row="1" Spacing="15" VerticalOptions="Center" IsVisible="False">
-            <Frame BackgroundColor="White" CornerRadius="10" Padding="10" HasShadow="True">
-                <StackLayout Orientation="Horizontal" Spacing="10">
+        <StackLayout x:Name="SignUpForm" Grid.Row="1" Spacing="10" VerticalOptions="Start" IsVisible="False" Margin="0,10,0,0">
+            <Frame BackgroundColor="White" CornerRadius="10" Padding="5" HasShadow="True">
+                <StackLayout Orientation="Horizontal" Spacing="5">
                     <Image Source="user_icon.png" WidthRequest="25" HeightRequest="25" VerticalOptions="Center"/>
                     <Entry x:Name="UsernameEntry" Placeholder="Enter your User Name" FontSize="16" TextColor="#333333"
                    PlaceholderColor="#888888" FontFamily ="sans-serif"/>
                 </StackLayout>
             </Frame>
 
-            <Frame BackgroundColor="White" CornerRadius="10" Padding="10" HasShadow="True">
-                <StackLayout Orientation="Horizontal" Spacing="10">
+            <Frame BackgroundColor="White" CornerRadius="10" Padding="5" HasShadow="True">
+                <StackLayout Orientation="Horizontal" Spacing="5">
                     <Image Source="email_icon.png" WidthRequest="25" HeightRequest="25" VerticalOptions="Center" />
-                    <Entry x:Name="SignUpEmailEntry" Placeholder="Enter your email"  Keyboard="Email" FontSize="16" 
+                    <Entry x:Name="SignUpEmailEntry" Placeholder="Enter your Email"  Keyboard="Email" FontSize="16" 
                      TextColor="#333333" FontFamily ="sans-serif" PlaceholderColor="#888888" />
                 </StackLayout>
             </Frame>
 
 
             <!-- Sign-Up Password Entry -->
-            <Frame BackgroundColor="White" CornerRadius="10" Padding="10" HasShadow="True">
-                <StackLayout Orientation="Horizontal" Spacing="10">
+            <Frame BackgroundColor="White" CornerRadius="10" Padding="5" HasShadow="True">
+                <StackLayout Orientation="Horizontal" Spacing="5">
                     <Image Source="password_icon.png" WidthRequest="25" HeightRequest="25" VerticalOptions="Center" />
-                    <Entry x:Name="SignUpPasswordEntry"  Placeholder="Enter your password" IsPassword="True" 
+                    <Entry x:Name="SignUpPasswordEntry"  Placeholder="Enter your Password" IsPassword="True" 
                            FontSize="16"  TextColor="#333333" PlaceholderColor="#888888" FontFamily ="sans-serif" />
                 </StackLayout>
             </Frame>
 
             <!-- Confirm Password Entry -->
-            <Frame BackgroundColor="White" CornerRadius="10" Padding="10" HasShadow="True">
-                <StackLayout Orientation="Horizontal" Spacing="10">
+            <Frame BackgroundColor="White" CornerRadius="10" Padding="5" HasShadow="True">
+                <StackLayout Orientation="Horizontal" Spacing="5">
                     <Image Source="password_icon.png" WidthRequest="25" HeightRequest="25" VerticalOptions="Center" />
-                    <Entry x:Name="ConfirmPasswordEntry"  Placeholder="Confirm your password" IsPassword="True" 
+                    <Entry x:Name="ConfirmPasswordEntry"  Placeholder="Confirm your Password" IsPassword="True" 
                            FontSize="16" TextColor="#333333" PlaceholderColor="#888888" FontFamily ="sans-serif"/>
                 </StackLayout>
             </Frame>
-
+            <!-- Sign-Up Button -->
             <Button Text="Sign Up"  Clicked="OnSignUpClicked" BackgroundColor="#7ea3ab" TextColor="Black"  FontAttributes="Bold" 
                     CornerRadius="10"  FontFamily ="sans-serif" HeightRequest="50"/>
         </StackLayout>

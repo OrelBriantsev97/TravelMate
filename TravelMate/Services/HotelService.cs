@@ -22,7 +22,7 @@ namespace TravelMate.Services
                  $"&api_key={ApiKey}";
 
             var response = await client.GetStringAsync(requestUrl);
-
+            Console.WriteLine($"[DEBUG] API Request URL: {requestUrl}");
             if (string.IsNullOrEmpty(response))
                 return null;
 
@@ -41,7 +41,6 @@ namespace TravelMate.Services
                     {
                         HotelName = property["name"]?.ToString(),
                         LogoUrl = property["images"]?.FirstOrDefault()?["original_image"]?.ToString(),
-                        Rate = property["overall_rating"]?.Value<double>() ?? 0.0,
                         Latitude = property["gps_coordinates"]?["latitude"].Value<double>() ?? 0.0,
                         Address = property["address"]?.ToString(),
                         Phone = property["phone"]?.ToString(),

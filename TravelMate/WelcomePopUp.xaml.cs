@@ -12,16 +12,18 @@ namespace TravelMate
             InitializeComponent();
             userId = UserId;
             BindingContext = this;
-            LoadUserNameAsync();
+            LoadUserName();
         }
-
+        // TODO: remove shadow and fix username not appering
         // On button click, navigate to the login page or the desired page
         private async void OnStartAddingClicked(object sender, EventArgs e)
         {
+            WelcomeLayout.IsVisible = false;
             await Navigation.PopModalAsync();
+            await Task.Delay(100);
             await Navigation.PushAsync(new NewFlightPage(userId));
         }
-        private async void LoadUserNameAsync()
+        private async void LoadUserName()
         {
             // Fetch the username from the database using the userId
             string userName = await DatabaseHelper.GetUserNameById(userId);
@@ -38,8 +40,8 @@ namespace TravelMate
                 UserName = "Welcome Traveler ✈️";
             }
 
-            // Notify the UI that the UserName property has changed, which will refresh the Label
-            OnPropertyChanged(nameof(UserName));
+            BindingContext = null;  // Clear first
+            BindingContext = this;
         }
     }
 }
