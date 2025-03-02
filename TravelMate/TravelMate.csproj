@@ -80,10 +80,67 @@
 	<ItemGroup>
 	  <None Remove="Platforms\Android\Resources\drawable\splash.png" />
 	  <None Remove="Platforms\Android\Resources\mipmap-xxhdpi\ic_launcher.png" />
+	  <None Remove="Resources\Images\Destinations\BER.jpg" />
+	  <None Remove="Resources\Images\Destinations\BKK.jpg" />
+	  <None Remove="Resources\Images\Destinations\CDG.jpg" />
+	  <None Remove="Resources\Images\Destinations\CEB.jpg" />
+	  <None Remove="Resources\Images\Destinations\CNX.jpg" />
+	  <None Remove="Resources\Images\Destinations\DXB.jpg" />
+	  <None Remove="Resources\Images\Destinations\EZE.jpg" />
+	  <None Remove="Resources\Images\Destinations\FCO.jpg" />
+	  <None Remove="Resources\Images\Destinations\GIG.jpg" />
+	  <None Remove="Resources\Images\Destinations\GRU.jpg" />
+	  <None Remove="Resources\Images\Destinations\HAN.jpg" />
+	  <None Remove="Resources\Images\Destinations\HKT.jpg" />
+	  <None Remove="Resources\Images\Destinations\HND.jpg" />
+	  <None Remove="Resources\Images\Destinations\JFK.jpg" />
+	  <None Remove="Resources\Images\Destinations\KBV.jpg" />
+	  <None Remove="Resources\Images\Destinations\LAX.jpg" />
+	  <None Remove="Resources\Images\Destinations\LHR.jpg" />
+	  <None Remove="Resources\Images\Destinations\LIM.jpg" />
+	  <None Remove="Resources\Images\Destinations\MNL.jpg" />
+	  <None Remove="Resources\Images\Destinations\MVD.jpg" />
+	  <None Remove="Resources\Images\Destinations\SGN.jpg" />
+	  <None Remove="Resources\Images\Destinations\SIN.jpg" />
+	  <None Remove="Resources\Images\Destinations\SYD.jpg" />
+	  <None Remove="Resources\Images\Destinations\TLV.jpg" />
+	  <None Remove="Resources\Images\Destinations\UIO.jpg" />
+	  <None Remove="Resources\Images\Destinations\USM.jpg" />
+	  <None Remove="Resources\Images\Destinations\VTE.jpg" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <AndroidResource Include="Resources\values\styles.xml" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Resources\Images\Destinations\BER.jpg" />
+	  <EmbeddedResource Include="Resources\Images\Destinations\BKK.jpg" />
+	  <EmbeddedResource Include="Resources\Images\Destinations\CDG.jpg" />
+	  <EmbeddedResource Include="Resources\Images\Destinations\CEB.jpg" />
+	  <EmbeddedResource Include="Resources\Images\Destinations\CNX.jpg" />
+	  <EmbeddedResource Include="Resources\Images\Destinations\DXB.jpg" />
+	  <EmbeddedResource Include="Resources\Images\Destinations\EZE.jpg" />
+	  <EmbeddedResource Include="Resources\Images\Destinations\FCO.jpg" />
+	  <EmbeddedResource Include="Resources\Images\Destinations\GIG.jpg" />
+	  <EmbeddedResource Include="Resources\Images\Destinations\GRU.jpg" />
+	  <EmbeddedResource Include="Resources\Images\Destinations\HAN.jpg" />
+	  <EmbeddedResource Include="Resources\Images\Destinations\HKT.jpg" />
+	  <EmbeddedResource Include="Resources\Images\Destinations\HND.jpg" />
+	  <EmbeddedResource Include="Resources\Images\Destinations\JFK.jpg" />
+	  <EmbeddedResource Include="Resources\Images\Destinations\KBV.jpg" />
+	  <EmbeddedResource Include="Resources\Images\Destinations\LAX.jpg" />
+	  <EmbeddedResource Include="Resources\Images\Destinations\LHR.jpg" />
+	  <EmbeddedResource Include="Resources\Images\Destinations\LIM.jpg" />
+	  <EmbeddedResource Include="Resources\Images\Destinations\MNL.jpg" />
+	  <EmbeddedResource Include="Resources\Images\Destinations\MVD.jpg" />
+	  <EmbeddedResource Include="Resources\Images\Destinations\SGN.jpg" />
+	  <EmbeddedResource Include="Resources\Images\Destinations\SIN.jpg" />
+	  <EmbeddedResource Include="Resources\Images\Destinations\SYD.jpg" />
+	  <EmbeddedResource Include="Resources\Images\Destinations\TLV.jpg" />
+	  <EmbeddedResource Include="Resources\Images\Destinations\UIO.jpg" />
+	  <EmbeddedResource Include="Resources\Images\Destinations\USM.jpg" />
+	  <EmbeddedResource Include="Resources\Images\Destinations\VTE.jpg" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -100,6 +157,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="HomePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="LoginPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

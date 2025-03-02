@@ -62,10 +62,10 @@ namespace TravelMate
             return userName;
         }
         public static async Task<bool> IsEmailExist(string email)
-        { 
-            var db = await GetDatabase();  // Use the async method to get the database connection
-            var user = db.Table<User>().FirstOrDefault(u => u.Email == email);  // Use async method for querying the table
-            return user != null;  // Return whether a user with that email exists
+        {
+            var db = await GetDatabase();
+            var user = db.Table<User>().FirstOrDefault(u => u.Email == email);
+            return user != null;
         }
 
         public static async Task AddFlight(Flight flight, int userId)
@@ -86,12 +86,27 @@ namespace TravelMate
             {
                 throw new ArgumentException("Invalid UserId");
             }
-
+            Console.WriteLine($"userid in add hotel is  {userId}");
             hotel.UserId = userId; // Associate the hotel with the user
             var db = await GetDatabase();
             db.Insert(hotel);
         }
 
+        public static async Task<List<Flight>> GetFlightsByUserId(int userId)
+        {
+            var db = await GetDatabase();
+            // No need for await here, ToList() is synchronous in this context.
+            var flights = db.Table<Flight>().Where(f => f.UserId == userId).ToList();
 
+            if (flights.Any())
+            {
+                Console.WriteLine($"Found {flights.Count} flights for UserId {userId}.");
+            }
+            else
+            {
+                Console.WriteLine($"No flights found for UserId {userId}.");
+            }
+            return flights;
+        }
     }
 }

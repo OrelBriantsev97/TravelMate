@@ -4,20 +4,19 @@ using System.Diagnostics;
 using Microsoft.Maui.Controls;
 using TravelMate.Models;
 using TravelMate.Services;
-using Android.Hardware.Lights;
 
 namespace TravelMate
 {
     public partial class NewHotelPage : ContentPage
     {
-        public int UserId { get; set; }
+        public int userId { get; set; }
         public ObservableCollection<Hotel> HotelResults { get; set; } = new ObservableCollection<Hotel>();
 
-        public NewHotelPage(int userId)
+        public NewHotelPage(int userID)
         {
 
             InitializeComponent();
-            UserId = userId;
+            userId = userID;
             this.BindingContext = this;
         }
 
@@ -28,7 +27,7 @@ namespace TravelMate
             var city = CityEntry.Text;
             var checkInDate = CheckInDatePicker.Date;
             var checkOutDate = CheckOutDatePicker.Date;
-
+            Console.WriteLine($"userid is  in hotel1 {userId}");
             if (string.IsNullOrEmpty(hotelName) || string.IsNullOrEmpty(city))
             {
                 await DisplayAlert("Error", "Please enter both hotel name and city.", "OK");
@@ -74,11 +73,12 @@ namespace TravelMate
         private async void OnHotelTapped(object sender, EventArgs e)
         {
             var answer = await DisplayAlert("Add Hotel", "Do you want to add this Hotel to your trip?", "Yes", "No");
+            Console.WriteLine($"userid is  in hotel6 {userId}");
             if (answer)
             {
                 var hotel = new Hotel
                 {
-                    UserId = UserId,
+                    UserId = userId,
                     HotelName = NameLabel.Text,
                     Address = AddressLabel.Text,
                     Phone = PhoneLabel.Text.Replace("Phone: ", ""),
@@ -92,7 +92,8 @@ namespace TravelMate
                     Amenities = HotelAmenitiesLabel.Text,
 
                 };
-                DatabaseHelper.AddHotel(hotel, UserId);
+                DatabaseHelper.AddHotel(hotel, userId);
+                
                 await DisplayAlert("Success", "Hotel added to your trip!", "OK");
                 bool addAnotherHotel = await DisplayAlert("Add Another Hotel?", "Do you want to add another Hotel?", "Yes", "No");
                 if(addAnotherHotel)
@@ -103,6 +104,10 @@ namespace TravelMate
                     CheckOutDatePicker.Date = DateTime.Now;
 
 
+                }
+                else
+                {
+                    await Navigation.PushAsync(new HomePage(userId));
                 }
             }
             // TODO: fix data colors and show full address

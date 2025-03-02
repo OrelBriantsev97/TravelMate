@@ -20,9 +20,9 @@ namespace TravelMate
 
         private readonly List<string> airportOptions = new List<string>
         {
-            "Tel Aviv - TLV","New York - JFK","Los Angeles - LAX","London - LHR","Paris - CDG","Tokyo - HND","Berlin - BER","Sydney - SYD","Dubai - DXB","Rome - FCO",
-            "Bangkok - BKK","Phuket - HKT","Samui - USM","Chiang Mai - CNX","Manila - MNL","Cebu - CEB","Singapore - SIN","Jakarta - CGK","Kuala Lumpur - KUL",
-            "Hanoi - HAN","Ho Chi Minh City - SGN","Vientiane - VTE","Rio de Janeiro - GIG","São Paulo - GRU","Buenos Aires - EZE","Lima - LIM","Quito - UIO","Caracas - CCS",
+            "Tel Aviv - TLV","New York - JFK","Los Angeles - LAX","London - LHR","Paris - CDG","Tokyo - HND","Berlin - BER","Sydney - SYD","Dubai - DXB","Abu Dhabi - AUH","Rome - FCO",
+            "Bangkok - BKK","Phuket - HKT","Krabi - KBV","Samui - USM","Chiang Mai - CNX","Manila - MNL","Cebu - CEB","Singapore - SIN",
+            "Hanoi - HAN","Ho Chi Minh City - SGN","Vientiane - VTE","Rio de Janeiro - GIG","São Paulo - GRU","Buenos Aires - EZE","Lima - LIM","Quito - UIO",
             "Montevideo - MVD"
         };
 
@@ -131,11 +131,13 @@ namespace TravelMate
                 }
                 else
                 {
+                    Console.WriteLine($"userid is  in flight2 {userId}");
                     await Navigation.PushAsync(new NewHotelPage(userId));
                 }
 
 
             }
+            Console.WriteLine($"userid is  in flight1 {userId}");
             await Navigation.PushAsync(new NewHotelPage(userId));
 
         }
