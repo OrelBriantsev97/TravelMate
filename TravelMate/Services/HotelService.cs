@@ -7,7 +7,7 @@ namespace TravelMate.Services
 {
     public static class HotelService
     {
-        private const string ApiKey = "90a7e3bc24bfeb081ad2f4bab00f252e396a3b555b066ad6b71b4809d1d23a60"; 
+        private const string ApiKey = ""; 
         private const string ApiUrl = "https://serpapi.com/search?engine=google_hotels"; 
 
         public static async Task<List<HotelDetails>> GetHotelDetailsAsync(string name, string checkIn, string checkOut)
