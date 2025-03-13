@@ -10,7 +10,7 @@ namespace TravelMate
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-
+            Microsoft.Maui.ApplicationModel.Permissions.RequestAsync<Microsoft.Maui.ApplicationModel.Permissions.LocationWhenInUse>();
             Window.SetStatusBarColor(Android.Graphics.Color.ParseColor("#7ea3ab"));
         }
     }

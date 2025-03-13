@@ -40,5 +40,30 @@ namespace TravelMate
                 await DisplayAlert("Error", $"An error occurred while loading hotels: {ex.Message}", "OK");
             }
         }
+
+        private async void ShowMap(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new MapPage(userId));
+        }
+
+        private async void ShowHotels(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new MyHotelsPage(userId));
+        }
+
+        private async void ShowFlights(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new MyFlightsPage(userId));
+        }
+
+        private async void ShowHome(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new HomePage(userId));
+        }
+
+        private async void ShowProfileOptions(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new MyProfilePage(userId));
+        }
     }
 }

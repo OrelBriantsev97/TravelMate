@@ -1,5 +1,1 @@
-missions :
-1. fix flights page to add more pages
-2.לסדר את המלונות 
-3להציג לפי מפה 
-4.להוסיף עמוד של הטיסות שלי 
+1. fix my profile

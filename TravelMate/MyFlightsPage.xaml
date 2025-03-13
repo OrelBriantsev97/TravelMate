@@ -5,10 +5,10 @@
              NavigationPage.HasNavigationBar="False"
              BackgroundColor="#C1ECF5">
 
-    <Grid RowDefinitions="Auto,*">
+    <Grid RowDefinitions="Auto,*,Auto">
         <!-- Page Title -->
-        <Label Text="My Flights" FontSize="24" FontAttributes="Bold" TextColor="#3b6069"
-               HorizontalOptions="Center" Margin="0,20,0,10"/>
+        <Label Text="My Flights" FontSize="30" FontAttributes="Bold" TextColor="#3b6069"
+               HorizontalOptions="Center" Margin="0,70,0,10" FontFamily="PlayWrite"/>
 
         <!-- Flights List -->
         <CollectionView x:Name="FlightsListView" ItemsSource="{Binding Flights}" Grid.Row="1"
@@ -17,12 +17,21 @@
                 <DataTemplate>
                     <Frame BackgroundColor="White" CornerRadius="10" Margin="10" Padding="15" HasShadow="True">
                         <StackLayout>
-                            <Label Text="{Binding FlightNumber}" FontAttributes="Bold" TextColor="#3b6069"/>
-                            <Label Text="{Binding Airline}" TextColor="Gray"/>
-                            <Label Text="{Binding DepartureCity}" TextColor="Black"/>
-                            <Label Text="{Binding ArrivalCity}" TextColor="Black"/>
-                            <Label Text="{Binding DepartureTime}" TextColor="Gray"/>
-                            <Label Text="{Binding ArrivalTime}" TextColor="Gray"/>
+                            <Label Text="{Binding FlightNumber}" FontFamily="Chi"  FontAttributes="Bold" TextColor="#3b6069" FontSize="22" HorizontalOptions="CenterAndExpand"/>
+                            <Label Text="{Binding Airline}" TextColor="Gray" HorizontalOptions="CenterAndExpand"/>
+
+                            <Grid ColumnDefinitions="Auto, *, Auto" VerticalOptions="Center" Margin="10,0">
+                                <Label Text="{Binding DepartureCity}" TextColor="Black" FontSize="16" Grid.Column="0" HorizontalTextAlignment="Start"/>
+
+                                <BoxView Grid.Column="1" HeightRequest="1" WidthRequest="200" BackgroundColor="Gray" VerticalOptions="Center" HorizontalOptions="Fill"/>
+
+                                <Label Text="{Binding ArrivalCity}" TextColor="Black" FontSize="16" Grid.Column="2" HorizontalTextAlignment="End"/>
+                            </Grid>
+
+                            <Grid ColumnDefinitions="Auto, *">
+                                <Label Text="{Binding DepartureTime}" TextColor="Gray" FontSize="14" Grid.Column="0" HorizontalTextAlignment="Start"/>
+                                <Label Text="{Binding ArrivalTime}" TextColor="Gray" FontSize="14" Grid.Column="1" HorizontalTextAlignment="End"/>
+                            </Grid>
                         </StackLayout>
                     </Frame>
                 </DataTemplate>
@@ -30,7 +39,7 @@
         </CollectionView>
 
         <!-- Bottom Navigation Bar -->
-        <Grid Grid.Row="2" BackgroundColor="White" HeightRequest="70">
+        <Grid Grid.Row="2" BackgroundColor="#6da7b5" HeightRequest="70">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
@@ -39,26 +48,25 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <!-- My Hotels -->
-            <StackLayout Grid.Column="0" VerticalOptions="Center" HorizontalOptions="Center">
-                <Image Source="hotel_icon.png" HeightRequest="30" WidthRequest="30">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="ShowHotels"/>
-                    </Image.GestureRecognizers>
-                </Image>
-                <Label Text="My Hotels" FontSize="12" TextColor="Black"/>
-            </StackLayout>
-
             <!-- My Flights -->
-            <StackLayout Grid.Column="1" VerticalOptions="Center" HorizontalOptions="Center">
-                <Image Source="flight_icon.png" HeightRequest="30" WidthRequest="30">
+            <StackLayout Grid.Column="4" VerticalOptions="Center" HorizontalOptions="Center">
+                <Image Source="airplain_icon.png" HeightRequest="30" WidthRequest="30">
                     <Image.GestureRecognizers>
                         <TapGestureRecognizer Tapped="ShowFlights"/>
                     </Image.GestureRecognizers>
                 </Image>
                 <Label Text="My Flights" FontSize="12" TextColor="Black"/>
             </StackLayout>
-
+            
+            <!-- My Hotels -->
+            <StackLayout Grid.Column="3" VerticalOptions="Center" HorizontalOptions="Center">
+                <Image Source="hotel.png" HeightRequest="30" WidthRequest="30">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="ShowHotels"/>
+                    </Image.GestureRecognizers>
+                </Image>
+                <Label Text="My Hotels" FontSize="12" TextColor="Black"/>
+            </StackLayout>
 
             <!-- Home -->
             <StackLayout Grid.Column="2" VerticalOptions="Center" HorizontalOptions="Center">
@@ -71,14 +79,14 @@
             </StackLayout>
 
             <!-- Placeholder (Future Feature) -->
-            <StackLayout Grid.Column="3" VerticalOptions="Center" HorizontalOptions="Center">
+            <StackLayout Grid.Column="1" VerticalOptions="Center" HorizontalOptions="Center">
                 <Image Source="question_icon.png" HeightRequest="30" WidthRequest="30"/>
                 <Label Text="Coming Soon" FontSize="12" TextColor="Gray"/>
             </StackLayout>
 
             <!-- Profile -->
-            <StackLayout Grid.Column="4" VerticalOptions="Center" HorizontalOptions="Center">
-                <Image Source="profile_icon.png" HeightRequest="30" WidthRequest="30">
+            <StackLayout Grid.Column="0" VerticalOptions="Center" HorizontalOptions="Center">
+                <Image Source="user_icon.png" HeightRequest="30" WidthRequest="30">
                     <Image.GestureRecognizers>
                         <TapGestureRecognizer Tapped="ShowProfileOptions"/>
                     </Image.GestureRecognizers>
