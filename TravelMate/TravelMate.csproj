@@ -70,6 +70,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <AndroidResource Remove="Platforms\Android\Resources\drawable\bg.png" />
 	  <AndroidResource Remove="Platforms\Android\Resources\drawable\splash.xml" />
 	  <AndroidResource Remove="Platforms\Android\Resources\mipmap-anydpi-v26\ic_launcher.xml" />
 	  <AndroidResource Remove="Platforms\Android\Resources\mipmap-xxhdpi\ic_launcher_background.png" />
@@ -78,6 +79,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Platforms\Android\Resources\drawable\bg.png" />
 	  <None Remove="Platforms\Android\Resources\drawable\splash.png" />
 	  <None Remove="Platforms\Android\Resources\mipmap-xxhdpi\ic_launcher.png" />
 	  <None Remove="Resources\Images\Destinations\BER.jpg" />
@@ -144,8 +146,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0" />
+	  <MauiSplashScreen Include="Platforms\Android\Resources\drawable\bg.png">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </MauiSplashScreen>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.40" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.2" />
+		<PackageReference Include="Microsoft.Maui.Controls.Maps" Version="9.0.40" />
+		<PackageReference Include="Microsoft.Maui.Essentials" Version="9.0.40" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
 	</ItemGroup>
@@ -161,6 +171,18 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="LoginPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="MapPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="MyFlightsPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="MyHotelsPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="MyProfilePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="NewFlightPage.xaml">

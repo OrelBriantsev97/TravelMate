@@ -45,6 +45,17 @@ namespace TravelMate
 
         }
 
+        public static async Task<string> CheckCredentials(string email, string password)
+        {
+            var db = await GetDatabase();
+
+            var user = db.Table<User>()
+                               .FirstOrDefault(u => u.Email == email && u.Password == password);
+
+            return user != null ? string.Empty : "Invalid email or password.";
+        }
+
+
         public static async Task<string> GetUserNameById(int userId)
         {
             string userName = string.Empty;
@@ -61,6 +72,16 @@ namespace TravelMate
 
             return userName;
         }
+
+        public static async Task<int> GetUserIdByEmail(string email)
+        {
+            var db = await GetDatabase();
+
+            var user =db.Table<User>().FirstOrDefault(u => u.Email == email);
+
+            return user?.Id ?? -1; // Return UserId if found, otherwise -1
+        }
+
         public static async Task<bool> IsEmailExist(string email)
         {
             var db = await GetDatabase();
@@ -107,6 +128,22 @@ namespace TravelMate
                 Console.WriteLine($"No flights found for UserId {userId}.");
             }
             return flights;
+        }
+
+        public static async Task<List<Hotel>> GetHotelsByUserId(int userId)
+        {
+            var db = await GetDatabase();
+            var hotels = db.Table<Hotel>().Where(h => h.UserId == userId).ToList();
+
+            if (hotels.Any())
+            {
+                Console.WriteLine($"Found {hotels.Count} hotels for UserId {userId}.");
+            }
+            else
+            {
+                Console.WriteLine($"No hotels found for UserId {userId}.");
+            }
+            return hotels;
         }
     }
 }

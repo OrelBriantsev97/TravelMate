@@ -10,7 +10,6 @@ namespace TravelMate
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            this.SetTheme(Resource.Style.SplashTheme);
 
             Window.SetStatusBarColor(Android.Graphics.Color.ParseColor("#7ea3ab"));
         }

@@ -1,0 +1,16 @@
+first header :
+FontSize="30"
+FontFamily="Chi"
+FontAttributes="Bold"
+TextColor="#32545c"
+HorizontalOptions="Center"
+VerticalOptions="Center"
+second :
+FontFamily="PlayWrite"
+FontSize="18"
+TextColor="#3b6069"
+VerticalOptions="StartAndExpand"
+
+input - " FontFamily ="sans-serif"  FontSize="18" 
+buttons - playwrite bold
+under button - chi

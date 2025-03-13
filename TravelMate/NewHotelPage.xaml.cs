@@ -39,17 +39,19 @@ namespace TravelMate
             var hotelDetailsList = await HotelService.GetHotelDetailsAsync(hotelSearch, checkIn, checkOut);
             if (hotelDetailsList != null && hotelDetailsList.Count > 0)
             {
-                var hotel = hotelDetailsList[0]; // Take the first hotel
+                var hotel = hotelDetailsList[0];
 
                 HotelResultStack.IsVisible = true;
                 NameLabel.Text = hotel.HotelName;
-                AddressLabel.Text = hotel.Address;
+                AddressLabel.Text = !string.IsNullOrEmpty(hotel.Address) ? hotel.Address : "Nearby Places:";
+                NearbyPlacesLabel.IsVisible = string.IsNullOrEmpty(hotel.Address);
+                NearbyPlacesLabel.Text = hotel.NearbyPlaces;
                 HotelClassLabel.Text = hotel.HotelClass.ToString();
-                PhoneLabel.Text = $"Phone: {hotel.Phone}";
+                PhoneLabel.Text = !string.IsNullOrEmpty(hotel.Phone) ? $"Phone: {hotel.Phone}" : "Amenities:";
+                HotelAmenitiesLabel.IsVisible = string.IsNullOrEmpty(hotel.Phone);
+                HotelAmenitiesLabel.Text = string.Join(", ", hotel.Amenities.Take(3));
                 LatitudeLabel.Text = hotel.Latitude.ToString();
                 LongitudeLabel.Text = hotel.Longitude.ToString();
-                NearbyPlacesLabel.Text = hotel.NearbyPlaces;
-                HotelAmenitiesLabel.Text = string.Join(", ", hotel.Amenities);
                 Star1.IsVisible = hotel.HotelClass >= 1;
                 Star2.IsVisible = hotel.HotelClass >= 2;
                 Star3.IsVisible = hotel.HotelClass >= 3;
@@ -102,17 +104,18 @@ namespace TravelMate
                     CityEntry.Text = string.Empty;
                     CheckInDatePicker.Date = DateTime.Now;
                     CheckOutDatePicker.Date = DateTime.Now;
-
-
                 }
                 else
                 {
                     await Navigation.PushAsync(new HomePage(userId));
                 }
             }
-            // TODO: fix data colors and show full address
 
+        }
 
+        private async void OnSkipClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new HomePage(userId));
         }
     }
 }

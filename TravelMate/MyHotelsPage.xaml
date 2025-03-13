@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TravelMate.MyHotelsPage"
+			 NavigationPage.HasNavigationBar="False"
+             BackgroundColor="#C1ECF5">
+
+    <StackLayout Padding="10">
+        <Label Text="My Hotels" FontSize="30" FontFamily="PlayWrite" TextColor="#32545c" HorizontalOptions="Center" />
+
+        <CollectionView x:Name="HotelsCollectionView">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame BackgroundColor="White" CornerRadius="10" Margin="5" Padding="10" HasShadow="True">
+                        <StackLayout>
+                            <Image Source="{Binding ImageUrl}" Aspect="AspectFill" HeightRequest="100" />
+                            <Label Text="{Binding HotelName}" FontAttributes="Bold" TextColor="#3b6069" FontSize="18"/>
+                            <Label Text="{Binding Address}" TextColor="Gray" FontSize="14"/>
+                            <Label Text="{Binding CheckInDate, StringFormat='Check-in: {0:yyyy-MM-dd}'}" TextColor="Gray" FontSize="14"/>
+                            <Label Text="{Binding CheckOutDate, StringFormat='Check-out: {0:yyyy-MM-dd}'}" TextColor="Gray" FontSize="14"/>
+                        </StackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </StackLayout>
+</ContentPage>

@@ -62,7 +62,6 @@ namespace TravelMate
 
             return null;
         }
-
         /// Checks whether a given password meets security standards.
         /// The password must be at least 8 characters long and contain at least one number and one letter.
         /// <param name="password">The password string to validate.</param>

@@ -16,13 +16,26 @@ namespace TravelMate
 
         /// Handles the login button click event.
         /// Retrieves user input for email and password.
-        private void OnLoginClicked(object sender, EventArgs e)
+        private async void OnLoginClicked(object sender, EventArgs e)
         {
             var email = EmailEntry.Text;
             var password = PasswordEntry.Text;
-
-            // TODO: Implement second auth
-
+            int  userId = -1;
+            string errorMessage = await DatabaseHelper.CheckCredentials(email, password);
+            if (!string.IsNullOrEmpty(errorMessage))
+            {
+                await DisplayAlert("Error", "errorMessage", "OK");
+                return;
+            }
+            userId = await DatabaseHelper.GetUserIdByEmail(email);
+            if (userId != -1)
+            {
+                await Navigation.PushAsync(new HomePage(userId));
+            }
+            else
+            {
+                await DisplayAlert("Error", "User ID does not exist.", "OK");
+            }
         }
 
         /// Handles the "Sign Up"  tap event.

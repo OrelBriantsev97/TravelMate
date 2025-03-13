@@ -131,15 +131,9 @@ namespace TravelMate
                 }
                 else
                 {
-                    Console.WriteLine($"userid is  in flight2 {userId}");
                     await Navigation.PushAsync(new NewHotelPage(userId));
                 }
-
-
             }
-            Console.WriteLine($"userid is  in flight1 {userId}");
-            await Navigation.PushAsync(new NewHotelPage(userId));
-
         }
 
         private void ExtractFlightHours(FlightDetails flight)
@@ -268,6 +262,11 @@ namespace TravelMate
             await DisplayAlert("Help",
                                "enter the airport IATA code (e.g., DXB) or the city name (e.g., Dubai) to search for the airport.",
                                "OK");
+        }
+
+        private async void OnSkipClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new NewHotelPage(userId));
         }
 
     }

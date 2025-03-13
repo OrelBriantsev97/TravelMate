@@ -7,47 +7,53 @@
              NavigationPage.HasNavigationBar="False"
              BackgroundColor="#C1ECF5">
 
-	<VerticalStackLayout Padding="5" Spacing="10">
+	<VerticalStackLayout Padding="10" Spacing="10">
 		<StackLayout Grid.Row="0" Orientation="Horizontal" HorizontalOptions="Center" Padding="5">
-            <Label Text="Upcoming Bookings" FontFamily="sans-serif" TextColor ="#7ea3ab" FontSize="30" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center" Margin="0,40,0,20"/>
+            <Label Text="Upcoming Bookings" FontFamily="Chi" TextColor ="#32545c" FontSize="30" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center" Margin="0,100,0,20"/>
 		</StackLayout>
 
 		<StackLayout Grid.Row="0" Orientation="Horizontal" HorizontalOptions="Center" Padding="5">
-            <Label Text="Where are you staying next?" FontFamily="sans-serif" FontSize="16" TextColor="#3b6069" VerticalOptions="StartAndExpand" />
+            <Label Text="Where are you staying next?" FontFamily="PlayWrite" FontSize="18" TextColor="#3b6069" VerticalOptions="StartAndExpand" Margin="0,-50,0,0"/>
 		</StackLayout>
 
 		<Frame BackgroundColor="White" Padding="5" HasShadow="True">
 			<StackLayout Orientation="Horizontal" Spacing="10">
 				<Image Source="Resources/Images/hotel.png" WidthRequest="25" HeightRequest="25" VerticalOptions="Center" />
-                <Entry x:Name="HotelNameEntry" FontFamily="sans-serif" Placeholder="Hotel Name" FontSize="16" TextColor="#333333" PlaceholderColor="#888888" />
+                <Entry x:Name="HotelNameEntry" FontFamily="sans-serif" Placeholder="Hotel Name" FontSize="18" TextColor="#333333" PlaceholderColor="#888888" />
 			</StackLayout>
 		</Frame>
 
 		<Frame BackgroundColor="White" Padding="5" HasShadow="True">
 			<StackLayout Orientation="Horizontal" Spacing="10">
 				<Image Source="Resources/Images/origin.png" WidthRequest="25" HeightRequest="25" VerticalOptions="Center" />
-                <Entry x:Name="CityEntry" Placeholder="City              " FontSize="16" FontFamily="sans-serif" TextColor="#333333"/>
+                <Entry x:Name="CityEntry" Placeholder="City              " FontSize="18" FontFamily="sans-serif" TextColor="#333333"/>
 			</StackLayout>
 		</Frame>
 
 		<Frame BackgroundColor="White" Padding="5" HasShadow="True">
 			<StackLayout Orientation="Horizontal" Spacing="10">
 				<Image Source="calendar_icon.png" WidthRequest="25" HeightRequest="25" VerticalOptions="Center" />
-                <DatePicker x:Name="CheckInDatePicker" FontSize="16" FontFamily="sans-serif" TextColor="#333333" />
+                <DatePicker x:Name="CheckInDatePicker" FontSize="18" FontFamily="sans-serif" TextColor="#333333" />
 			</StackLayout>
 		</Frame>
 
         <Frame BackgroundColor="White" Padding="5" HasShadow="True">
             <StackLayout Orientation="Horizontal" Spacing="10">
                 <Image Source="calendar_icon.png" WidthRequest="25" HeightRequest="25" VerticalOptions="Center" />
-                <DatePicker x:Name="CheckOutDatePicker" FontSize="16" TextColor="#333333" FontFamily="sans-serif"/>
+                <DatePicker x:Name="CheckOutDatePicker" FontSize="18" TextColor="#333333" FontFamily="sans-serif"/>
             </StackLayout>
         </Frame>
 
         <Button Text="Search Hotels" Clicked="OnSearchHotelClicked"  BackgroundColor="#7ea3ab"
-                TextColor="White" FontAttributes="Bold" CornerRadius="10" FontFamily="sans-serif" HeightRequest="50"/>
+                TextColor="White" FontAttributes="Bold" CornerRadius="10" FontFamily="PlayWrite" HeightRequest="50"/>
 
-        <StackLayout x:Name="HotelResultStack" IsVisible="False" Padding="10" Spacing="15">
+        <Label Text="Skip for now" TextColor="Black" FontSize="18" FontFamily="Chi" HorizontalOptions="Center" Margin="0,10,0,20">
+            <Label.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnSkipClicked"/>
+            </Label.GestureRecognizers>
+        </Label>
+
+        <StackLayout x:Name="HotelResultStack" IsVisible="False" Padding="10" Spacing="25">
             <Frame Padding="10" CornerRadius="10" HasShadow="True">
                 <StackLayout Orientation="Horizontal">
                     <!-- Hotel Logo on the Left -->
@@ -55,7 +61,8 @@
 
                     <!-- Hotel Details on the Right -->
                     <StackLayout Padding="10" VerticalOptions="Center">
-                        <Label x:Name="NameLabel" FontSize="20" FontAttributes="Bold" TextColor="#7ea3ab" FontFamily="sans-serif"/>
+                        <Label x:Name="NameLabel" FontSize="20" FontAttributes="Bold" TextColor="#7ea3ab" FontFamily="sans-serif" LineBreakMode="WordWrap" 
+                               MaxLines="2" WidthRequest="200"/>
                         <!-- Star Rating -->
                         <StackLayout Orientation="Horizontal">
                             <Image x:Name="Star1" Source="star_icon.png" WidthRequest="20" HeightRequest="20" IsVisible="False"/>
@@ -68,7 +75,8 @@
                         <Label x:Name="HotelClassLabel" FontSize="14" TextColor="#4f818c" FontFamily="sans-serif"/>
                         <Label x:Name="AddressLabel" FontSize="14" TextColor="#666666" FontFamily="sans-serif" LineBreakMode="WordWrap" 
                                MaxLines="2" WidthRequest="200" />
-                        <Label x:Name="PhoneLabel" FontSize="14" TextColor="#666666" FontFamily="sans-serif" VerticalOptions="Start" HorizontalOptions="Start"/>
+                        <Label x:Name="PhoneLabel" FontSize="14" TextColor="#666666" FontFamily="sans-serif" VerticalOptions="Start" HorizontalOptions="Start" LineBreakMode="TailTruncation"
+                               MaxLines="3" WidthRequest="200"/>
                         <Label x:Name="LatitudeLabel" Text="" IsVisible="False"/>
                         <Label x:Name="LongitudeLabel" Text="" IsVisible="False"/>
                         <Label x:Name="NearbyPlacesLabel" Text="" IsVisible="False"/>
