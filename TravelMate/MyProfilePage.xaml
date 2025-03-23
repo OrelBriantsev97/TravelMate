@@ -33,61 +33,61 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <Grid Grid.Row="2" BackgroundColor="White" HeightRequest="70">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+		<Grid Grid.Row="2" BackgroundColor="#6da7b5" HeightRequest="70">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
 
-            <!-- My Hotels -->
-            <StackLayout Grid.Column="0" VerticalOptions="Center" HorizontalOptions="Center">
-                <Image Source="hotel_icon.png" HeightRequest="30" WidthRequest="30">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="ShowHotels"/>
-                    </Image.GestureRecognizers>
-                </Image>
-                <Label Text="My Hotels" FontSize="12" TextColor="Black"/>
-            </StackLayout>
+			<!-- My Hotels -->
+			<StackLayout Grid.Column="4" VerticalOptions="Center" HorizontalOptions="Center">
+				<Image Source="hotel.png" HeightRequest="30" WidthRequest="30">
+					<Image.GestureRecognizers>
+						<TapGestureRecognizer Tapped="ShowHotels"/>
+					</Image.GestureRecognizers>
+				</Image>
+				<Label Text="My Hotels" FontSize="12" TextColor="Black"/>
+			</StackLayout>
 
-            <!-- My Flights -->
-            <StackLayout Grid.Column="1" VerticalOptions="Center" HorizontalOptions="Center">
-                <Image Source="flight_icon.png" HeightRequest="30" WidthRequest="30">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="ShowFlights"/>
-                    </Image.GestureRecognizers>
-                </Image>
-                <Label Text="My Flights" FontSize="12" TextColor="Black"/>
-            </StackLayout>
+			<!-- My Flights -->
+			<StackLayout Grid.Column="3" VerticalOptions="Center" HorizontalOptions="Center" >
+				<Image Source="airplain_icon.png" HeightRequest="30" WidthRequest="30">
+					<Image.GestureRecognizers>
+						<TapGestureRecognizer Tapped="ShowFlights"/>
+					</Image.GestureRecognizers>
+				</Image>
+				<Label Text="My Flights" FontSize="12" TextColor="Black" />
+			</StackLayout>
 
+			<!-- Home -->
+			<StackLayout Grid.Column="2" VerticalOptions="Center" HorizontalOptions="Center">
+				<Image Source="home_icon.png" HeightRequest="35" WidthRequest="35">
+					<Image.GestureRecognizers>
+						<TapGestureRecognizer Tapped="ShowHome"/>
+					</Image.GestureRecognizers>
+				</Image>
+				<Label Text="Home" FontSize="12" TextColor="Black"/>
+			</StackLayout>
 
-            <!-- Home -->
-            <StackLayout Grid.Column="2" VerticalOptions="Center" HorizontalOptions="Center">
-                <Image Source="home_icon.png" HeightRequest="35" WidthRequest="35">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="ShowHome"/>
-                    </Image.GestureRecognizers>
-                </Image>
-                <Label Text="Home" FontSize="12" TextColor="Black"/>
-            </StackLayout>
+			<!-- Placeholder (Future Feature) -->
+			<StackLayout Grid.Column="1" VerticalOptions="Center" HorizontalOptions="Center">
+				<Image Source="question_icon.png" HeightRequest="30" WidthRequest="30"/>
+				<Label Text="Coming Soon" FontSize="12" TextColor="Gray"/>
+			</StackLayout>
 
-            <!-- Placeholder (Future Feature) -->
-            <StackLayout Grid.Column="3" VerticalOptions="Center" HorizontalOptions="Center">
-                <Image Source="question_icon.png" HeightRequest="30" WidthRequest="30"/>
-                <Label Text="Coming Soon" FontSize="12" TextColor="Gray"/>
-            </StackLayout>
+			<!-- Profile -->
+			<StackLayout Grid.Column="0" VerticalOptions="Center" HorizontalOptions="Center">
+				<Image Source="user_icon.png" HeightRequest="30" WidthRequest="30">
+					<Image.GestureRecognizers>
+						<TapGestureRecognizer Tapped="ShowProfileOptions"/>
+					</Image.GestureRecognizers>
+				</Image>
+				<Label Text="Profile" FontSize="12" TextColor="Black"/>
+			</StackLayout>
 
-            <!-- Profile -->
-            <StackLayout Grid.Column="4" VerticalOptions="Center" HorizontalOptions="Center">
-                <Image Source="profile_icon.png" HeightRequest="30" WidthRequest="30">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="ShowProfileOptions"/>
-                    </Image.GestureRecognizers>
-                </Image>
-                <Label Text="Profile" FontSize="12" TextColor="Black"/>
-            </StackLayout>
-        </Grid>
+		</Grid>
     </Grid>
 </ContentPage>

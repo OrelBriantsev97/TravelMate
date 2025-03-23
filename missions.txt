@@ -1,1 +1,6 @@
-1. fix my profile
+1.add users to new db
+2. add function to show users/hotels/flights in WPF
+3.fix mappage and finish design to homepage
+
+
+

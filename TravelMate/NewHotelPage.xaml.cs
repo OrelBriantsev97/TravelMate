@@ -100,7 +100,7 @@ namespace TravelMate
                 bool addAnotherHotel = await DisplayAlert("Add Another Hotel?", "Do you want to add another Hotel?", "Yes", "No");
                 if(addAnotherHotel)
                 {
-                    NameLabel.Text = string.Empty;
+                    HotelNameEntry.Text = string.Empty;
                     CityEntry.Text = string.Empty;
                     CheckInDatePicker.Date = DateTime.Now;
                     CheckOutDatePicker.Date = DateTime.Now;

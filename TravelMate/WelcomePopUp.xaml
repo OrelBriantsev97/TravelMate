@@ -16,27 +16,27 @@
                        HorizontalOptions="Center" FontFamily ="Chi"/>
 
                 <!-- Instructional text -->
-                <Label Text="To start, let's add your first flight and hotel." FontSize="16" TextColor="Black"
+                <Label Text="To start, let's add your first flight and hotel." FontSize="18" TextColor="Black"
                        HorizontalOptions="Center" FontFamily ="sans-serif"/>
 
                 <!-- Step 1: Add Flight -->
-                <Label Text="Step 1: Add a Flight" FontSize="18" TextColor="#333333" FontAttributes="Bold"
+                <Label Text="Step 1: Add a Flight" FontSize="20" TextColor="#333333" FontAttributes="Bold"
                        FontFamily ="Chi" HorizontalOptions="Center"/>
 
-                <Label Text="Enter flight number and departure date." FontSize="16" TextColor="Black"
+                <Label Text="Enter flight number and departure date." FontSize="18" TextColor="Black"
                        FontFamily ="sans-serif" HorizontalOptions="Center"/>
 
                 <!-- Step 2: Add Hotel -->
-                <Label Text="Step 2: Add a Hotel" FontSize="18" FontAttributes="Bold" TextColor="#333333"
+                <Label Text="Step 2: Add a Hotel" FontSize="20" FontAttributes="Bold" TextColor="#333333"
                        HorizontalOptions="Center" FontFamily ="Chi"/>
 
-                <Label Text="Enter hotel name and destination with check in/out dates." FontSize="16"
+                <Label Text="Enter hotel name and destination with check in/out dates." FontSize="18"
                        TextColor="Black" HorizontalOptions="Center" FontFamily ="sans-serif"/>
 
                 <!-- Button to continue to the next page -->
                 <Button Text="Got it! Let's Go " BackgroundColor="#7ea3ab"
                         TextColor="White" FontAttributes="Bold" Clicked="OnStartAddingClicked"
-                        HorizontalOptions="Center" FontFamily ="PlayWrite"/>
+                        HorizontalOptions="Center" FontFamily ="PlayWrite" FontSize="16"/>
             </StackLayout>
         </Frame>
     </Grid>

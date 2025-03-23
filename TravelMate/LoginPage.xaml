@@ -12,10 +12,10 @@
             <StackLayout Orientation="Vertical" Spacing="10" HorizontalOptions="Center">
                 <Image Source="mainlogo.png" WidthRequest="300" HeightRequest="300" VerticalOptions="Center" BackgroundColor="Transparent" Margin="0,-50,0,-60"/>
                 <Label Text="Welcome, Travelers! 🌍" FontSize="30"  TextColor="#32545c" FontAttributes="Bold"
-					   FontFamily ="Chi" HorizontalOptions="Center" VerticalOptions="Center"/>
+					   FontFamily ="sans-serif" HorizontalOptions="Center" VerticalOptions="Center"/>
 
-                <Label Text="Let’s get your journey started " FontSize="18" TextColor="#3b6069" 
-                       FontFamily ="PlayWrite" VerticalOptions="StartAndExpand" Padding="10" Margin="0,-20,0,60"/>
+                <Label Text="Let’s get your journey started " FontSize="22" TextColor="#3b6069" 
+                       FontFamily ="Chi" VerticalOptions="StartAndExpand" Padding="10" Margin="0,-20,0,60"/>
             </StackLayout>
         </Frame>
 		
@@ -26,7 +26,7 @@
                 <StackLayout Orientation="Horizontal" Spacing="5">
                     <Image Source="email_icon.png" WidthRequest="25" HeightRequest="25" VerticalOptions="Center"/>
                     <Entry x:Name="EmailEntry" Placeholder="Enter your email" Keyboard="Email" 
-                    TextColor="#333333" FontFamily ="sans-serif"  FontSize="18"  PlaceholderColor="#888888"/>
+                    TextColor="#333333" FontFamily ="sans-serif"  FontSize="20"  PlaceholderColor="#888888"/>
                 </StackLayout>
             </Frame>
 
@@ -35,7 +35,7 @@
                 <StackLayout Orientation="Horizontal" Spacing="5">
                     <Image Source="password_icon.png" WidthRequest="25" HeightRequest="25" VerticalOptions="Center"/>
                     <Entry x:Name="PasswordEntry" Placeholder="Enter your password" IsPassword="True" 
-                            TextColor="#333333"  FontFamily ="sans-serif"  FontSize="18"  PlaceholderColor="#888888"/>
+                            TextColor="#333333"  FontFamily ="sans-serif"  FontSize="20"  PlaceholderColor="#888888"/>
                 </StackLayout>
             </Frame>
 
@@ -43,18 +43,18 @@
             <Label x:Name="ErrorMessage" TextColor="Red" FontSize="14"  IsVisible="False" FontFamily ="sans-serif" HorizontalOptions="Center"/>
 
             <!-- Login Button -->
-            <Button Text="Login" Clicked="OnLoginClicked" BackgroundColor="#7ea3ab" TextColor="White" 
+            <Button Text="Login" Clicked="OnLoginClicked" BackgroundColor="#7ea3ab" TextColor="White" FontSize="16" 
                 FontFamily ="PlayWrite" CornerRadius="10" HeightRequest="50"/>
 
             <!-- Sign-Up Link -->
-            <Label Text="Don't have an account? Sign up here"  TextColor="Black"  FontSize="16" FontFamily ="Chi" HorizontalOptions="Center">
+            <Label Text="Don't have an account? Sign up here"  TextColor="Black"  FontSize="18" FontFamily ="Chi" HorizontalOptions="Center" FontAttributes="Bold">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer Tapped="OnSignUpTapped"/>
                 </Label.GestureRecognizers>
             </Label>
 
             <!-- Forgot Password Link -->
-            <Label Text="Forgot password?"  TextColor="Black" FontSize="16" FontFamily ="Chi" HorizontalOptions="Center">
+            <Label Text="Forgot password?"  TextColor="Black" FontSize="18" FontFamily ="Chi" HorizontalOptions="Center" FontAttributes="Bold">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer Tapped="OnForgotPasswordTapped"/>
                 </Label.GestureRecognizers>
@@ -62,7 +62,7 @@
         </StackLayout>
 
         <!-- Sign-Up Email Entry -->
-        <StackLayout x:Name="SignUpForm" Grid.Row="1" Spacing="10" VerticalOptions="Start" IsVisible="False" Margin="0,10,0,0">
+        <StackLayout x:Name="SignUpForm" Grid.Row="1" Spacing="10" VerticalOptions="Start" IsVisible="False" Margin="0,-50,0,0">
             <Frame BackgroundColor="White" CornerRadius="10" Padding="5" HasShadow="True">
                 <StackLayout Orientation="Horizontal" Spacing="5">
                     <Image Source="user_icon.png" WidthRequest="25" HeightRequest="25" VerticalOptions="Center"/>
@@ -99,7 +99,13 @@
             </Frame>
             <!-- Sign-Up Button -->
             <Button Text="Sign Up"  Clicked="OnSignUpClicked" BackgroundColor="#7ea3ab" TextColor="Black" 
-                    CornerRadius="10"  FontFamily ="PlayWrite" HeightRequest="50"/>
+                    CornerRadius="10"  FontFamily ="PlayWrite" HeightRequest="50" FontSize="16"/>
+
+            <Label Text="Already a traveler? Log in here!" TextColor="Black" FontSize="18" FontFamily ="Chi" HorizontalOptions="Center" FontAttributes="Bold">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnLoginTapped"/>
+                </Label.GestureRecognizers>
+            </Label>
         </StackLayout>
 
 

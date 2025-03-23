@@ -20,7 +20,7 @@ namespace TravelMate
         {
             var email = EmailEntry.Text;
             var password = PasswordEntry.Text;
-            int  userId = -1;
+            int userId = -1;
             string errorMessage = await DatabaseHelper.CheckCredentials(email, password);
             if (!string.IsNullOrEmpty(errorMessage))
             {
@@ -51,8 +51,15 @@ namespace TravelMate
             // TODO: Implement navigation to Forgot Password Page
             // Navigation.PushAsync(new ForgotPasswordPage());
         }
+        private void OnLoginTapped(object sender, EventArgs e)
+        {
+            SignUpForm.IsVisible = false;
+            LoginForm.IsVisible = true;
+        }
+
         /// Handles the sign-up button click event.
         /// Validates user input, registers a new user, and navigates to NewFlightPage .
+
         private async void OnSignUpClicked(object sender, EventArgs e)
         {
             var name = UsernameEntry.Text;

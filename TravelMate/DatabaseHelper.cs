@@ -22,6 +22,8 @@ namespace TravelMate
                     _database.CreateTable<User>();
                     _database.CreateTable<Flight>();
                     _database.CreateTable<Hotel>();
+                    _database.CreateTable<Checklist>();
+
                 }
                 catch (Exception ex)
                 {
@@ -77,7 +79,7 @@ namespace TravelMate
         {
             var db = await GetDatabase();
 
-            var user =db.Table<User>().FirstOrDefault(u => u.Email == email);
+            var user = db.Table<User>().FirstOrDefault(u => u.Email == email);
 
             return user?.Id ?? -1; // Return UserId if found, otherwise -1
         }
@@ -134,16 +136,27 @@ namespace TravelMate
         {
             var db = await GetDatabase();
             var hotels = db.Table<Hotel>().Where(h => h.UserId == userId).ToList();
-
-            if (hotels.Any())
-            {
-                Console.WriteLine($"Found {hotels.Count} hotels for UserId {userId}.");
-            }
-            else
-            {
-                Console.WriteLine($"No hotels found for UserId {userId}.");
-            }
             return hotels;
+        }
+
+        public static async Task<List<Checklist>> GetChecklist(int userId, string destination)
+        {
+            var db = await GetDatabase();
+            return db.Table<Checklist>()
+                     .Where(i => i.UserId == userId && i.Destination == destination)
+                     .ToList();
+        }
+
+        public static async Task AddChecklistItem(Checklist item)
+        {
+            var db = await GetDatabase();
+            db.Insert(item);
+        }
+
+        public static async Task UpdateChecklistItem(Checklist item)
+        {
+            var db = await GetDatabase();
+            db.Update(item);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -13,6 +14,9 @@ namespace TravelMate
     public partial class HomePage : ContentPage
     {
         private readonly int userId;
+        private string destination;
+        private double longitude;
+        private double latitude;
         private Flight closestFlight;
         private List<Hotel> hotels;
         private System.Timers.Timer countdownTimer;
@@ -89,6 +93,7 @@ namespace TravelMate
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
                     cityNameLabel.Text = arrivalCity;
+                    destination = arrivalCity;
                 });
                 StartCountdown();
             }
@@ -96,18 +101,25 @@ namespace TravelMate
             {
                 await DisplayAlert("Error", "An error occurred while loading the flight information.", "OK");
             }
+            
+
         }
 
         private async void LoadHotels()
         {
             try
             {
-
                 var hotels = await DatabaseHelper.GetHotelsByUserId(userId);
                 if (hotels != null && hotels.Count > 0)
                 {
+                    foreach (var hotel in hotels)
+                    {
+                        Console.WriteLine($"Hotel: {hotel.HotelName}, Image Size: {hotel.LogoUrl.Length}");
+
+                    }
                     HotelView.ItemsSource = hotels;
-                    Console.WriteLine("im hereeeeeeeeee");
+                    latitude = hotels[0].Latitude;
+                    longitude = hotels[0].Longitude;
 
                     for (int i = 0; i < hotels.Count; i++)
                     {
@@ -126,16 +138,13 @@ namespace TravelMate
                 // Handle any errors
                 await DisplayAlert("Error", $"An error occurred while loading hotels: {ex.Message}", "OK");
             }
+            await LoadWeatherInfo();
         }
 
         private void HotelScrolled(object sender, ItemsViewScrolledEventArgs e)
         {
             int currentIndex = e.CenterItemIndex;
-            Console.WriteLine("im he111");
         }
-
-  
-
 
         private void StartCountdown()
         {
@@ -194,6 +203,56 @@ namespace TravelMate
         private async void ShowProfileOptions(object sender, EventArgs e)
         {
             await Navigation.PushAsync(new MyProfilePage(userId));
+        }
+
+        private async void OnChecklistClicked(object sender, EventArgs e)
+        {
+            if(closestFlight == null)
+            {
+                await DisplayAlert("No Upcoming Flights", "You need to have an upcoming flight to create a checklist.", "OK");
+                return;
+            }
+            await Navigation.PushAsync(new ChecklistPage(userId, destination));
+        }
+        private async Task LoadWeatherInfo()
+        {
+            Console.WriteLine($"home load  : lat {latitude} and long {longitude}");
+            var (currentTemp, locationAddress) = await WeatherService.GetWeather(longitude, latitude);
+
+            if (currentTemp.HasValue)
+            {
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    WeatherTemp.Text = $"{currentTemp.Value}°C";
+                    WeatherCity.Text = locationAddress; // ✅ Set the resolved address
+
+                    if (currentTemp.Value >= 22)
+                    {
+                        WeatherIcon.Source = "sunny.png";
+                    }
+                    else if (currentTemp.Value >= 12)
+                    {
+                        WeatherIcon.Source = "cloudy.png";
+                    }
+                    else
+                    {
+                        WeatherIcon.Source = "cold.png";
+                    }
+                });
+            }
+            else
+            {
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    WeatherTemp.Text = "Weather N/A";
+                    WeatherCity.Text = "Location Unknown"; // Set fallback text
+                });
+            }
+        }
+
+        private async void OnConvertClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new CurrencyConverterPage(userId));
         }
 
     }

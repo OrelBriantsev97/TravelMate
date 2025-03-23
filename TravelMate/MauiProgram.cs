@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
+using SkiaSharp.Views.Maui.Controls.Hosting;  
+using Mapsui.UI.Maui;
 
 namespace TravelMate
 {
@@ -9,7 +11,6 @@ namespace TravelMate
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
-                .UseMauiMaps()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -21,8 +22,10 @@ namespace TravelMate
                     fonts.AddFont("Chilanka-Regular.ttf", "Chi");
                     fonts.AddFont("Niconne-Regular.ttf", "Nic");
 
-                });
- 
+                })
+                .UseSkiaSharp(); 
+                
+
 
 
 #if DEBUG
