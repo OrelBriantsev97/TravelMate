@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TravelMate.Controls.NavigationBar">
+
+    <Grid BackgroundColor="#6da7b5" HeightRequest="70">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- My Hotels -->
+        <StackLayout Grid.Column="4" VerticalOptions="Center" HorizontalOptions="Center">
+            <Image Source="hotel.png" HeightRequest="30" WidthRequest="30">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="ShowHotels"/>
+                </Image.GestureRecognizers>
+            </Image>
+            <Label Text="My Hotels" FontSize="12" TextColor="Black"/>
+        </StackLayout>
+
+        <!-- My Flights -->
+        <StackLayout Grid.Column="3" VerticalOptions="Center" HorizontalOptions="Center">
+            <Image Source="airplain_icon.png" HeightRequest="30" WidthRequest="30">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="ShowFlights"/>
+                </Image.GestureRecognizers>
+            </Image>
+            <Label Text="My Flights" FontSize="12" TextColor="Black"/>
+        </StackLayout>
+
+        <!-- Home -->
+        <StackLayout Grid.Column="2" VerticalOptions="Center" HorizontalOptions="Center">
+            <Image Source="home_icon.png" HeightRequest="35" WidthRequest="35">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="ShowHome"/>
+                </Image.GestureRecognizers>
+            </Image>
+            <Label Text="Home" FontSize="12" TextColor="Black"/>
+        </StackLayout>
+
+        <!-- Profile -->
+        <StackLayout Grid.Column="0" VerticalOptions="Center" HorizontalOptions="Center">
+            <Image Source="user_icon.png" HeightRequest="30" WidthRequest="30">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="ShowProfileOptions"/>
+                </Image.GestureRecognizers>
+            </Image>
+            <Label Text="Profile" FontSize="12" TextColor="Black"/>
+        </StackLayout>
+
+        
+        <StackLayout Grid.Column="1" VerticalOptions="Center" HorizontalOptions="Center" Margin="-5,0,0,0">
+            <Image Source="places.png" HeightRequest="35" WidthRequest="35">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="ShowPlaces"/>
+                </Image.GestureRecognizers>
+            </Image>
+            <Label Text="Places" FontSize="12" TextColor="Black"/>
+        </StackLayout>
+    </Grid>
+
+</ContentView>

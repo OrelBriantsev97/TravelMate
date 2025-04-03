@@ -107,7 +107,8 @@ namespace TravelMate
                 }
                 else
                 {
-                    await Navigation.PushAsync(new HomePage(userId));
+                    var homePage = new HomePage(userId);
+                    await Navigation.PushAsync(new NavigationPage(homePage));
                 }
             }
 
@@ -115,7 +116,8 @@ namespace TravelMate
 
         private async void OnSkipClicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new HomePage(userId));
+            var homePage = new HomePage(userId);
+            await Navigation.PushAsync(new NavigationPage(homePage));
         }
     }
 }

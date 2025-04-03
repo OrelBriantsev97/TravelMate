@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:TravelMate.Controls"
              x:Class="TravelMate.CurrencyConverterPage"
              NavigationPage.HasNavigationBar="False"
              BackgroundColor="#C1ECF5">
@@ -62,55 +63,8 @@
 
         </VerticalStackLayout>
 
-        <Grid Grid.Row="1" BackgroundColor="#6da7b5" HeightRequest="70">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <StackLayout Grid.Column="4" VerticalOptions="Center" HorizontalOptions="Center">
-                <Image Source="hotel.png" HeightRequest="30" WidthRequest="30">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="ShowHotels"/>
-                    </Image.GestureRecognizers>
-                </Image>
-                <Label Text="My Hotels" FontSize="12" TextColor="Black"/>
-            </StackLayout>
-
-            <StackLayout Grid.Column="3" VerticalOptions="Center" HorizontalOptions="Center" >
-                <Image Source="airplain_icon.png" HeightRequest="30" WidthRequest="30">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="ShowFlights"/>
-                    </Image.GestureRecognizers>
-                </Image>
-                <Label Text="My Flights" FontSize="12" TextColor="Black" />
-            </StackLayout>
-
-            <StackLayout Grid.Column="2" VerticalOptions="Center" HorizontalOptions="Center">
-                <Image Source="home_icon.png" HeightRequest="35" WidthRequest="35">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="ShowHome"/>
-                    </Image.GestureRecognizers>
-                </Image>
-                <Label Text="Home" FontSize="12" TextColor="Black"/>
-            </StackLayout>
-
-            <StackLayout Grid.Column="1" VerticalOptions="Center" HorizontalOptions="Center">
-                <Image Source="question_icon.png" HeightRequest="30" WidthRequest="30"/>
-                <Label Text="Coming Soon" FontSize="12" TextColor="Gray"/>
-            </StackLayout>
-
-            <StackLayout Grid.Column="0" VerticalOptions="Center" HorizontalOptions="Center">
-                <Image Source="user_icon.png" HeightRequest="30" WidthRequest="30">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="ShowProfileOptions"/>
-                    </Image.GestureRecognizers>
-                </Image>
-                <Label Text="Profile" FontSize="12" TextColor="Black"/>
-            </StackLayout>
+        <Grid Grid.Row="2">
+            <ContentView x:Name="NavigationContainer"/>
         </Grid>
     </Grid>
 </ContentPage>

@@ -82,6 +82,7 @@
 	  <None Remove="Platforms\Android\Resources\drawable\bg.png" />
 	  <None Remove="Platforms\Android\Resources\drawable\splash.png" />
 	  <None Remove="Platforms\Android\Resources\mipmap-xxhdpi\ic_launcher.png" />
+	  <None Remove="Resources\Images\Destinations\AUH.jpg" />
 	  <None Remove="Resources\Images\Destinations\BER.jpg" />
 	  <None Remove="Resources\Images\Destinations\BKK.jpg" />
 	  <None Remove="Resources\Images\Destinations\CDG.jpg" />
@@ -116,6 +117,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <EmbeddedResource Include="Resources\Images\Destinations\AUH.jpg" />
 	  <EmbeddedResource Include="Resources\Images\Destinations\BER.jpg" />
 	  <EmbeddedResource Include="Resources\Images\Destinations\BKK.jpg" />
 	  <EmbeddedResource Include="Resources\Images\Destinations\CDG.jpg" />
@@ -159,6 +161,8 @@
 		<PackageReference Include="Microsoft.Maui.Controls.Maps" Version="9.0.40" />
 		<PackageReference Include="Microsoft.Maui.Essentials" Version="9.0.40" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="SendPulse" Version="1.0.0" />
+		<PackageReference Include="SendPulse.SDK" Version="1.0.0" />
 		<PackageReference Include="SkiaSharp" Version="2.88.9-preview.2.2" />
 		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="2.88.9-preview.2.2" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
@@ -195,10 +199,16 @@
 	  <MauiXaml Update="MyProfilePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="NavigationBar.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="NewFlightPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="NewHotelPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="MyPlacesPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="SplashScreenPage.xaml">

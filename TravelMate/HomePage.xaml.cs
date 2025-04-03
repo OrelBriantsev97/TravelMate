@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Timers;
 using Microsoft.Maui.Controls;
+using TravelMate.Controls;
 using TravelMate.Models;
 using TravelMate.Services;
 
@@ -38,6 +39,9 @@ namespace TravelMate
             InitializeComponent();
             userId = userID;
             LoadClosestFlight();
+
+            var navBar = new NavigationBar(userId, destination);
+            NavigationContainer.Content = navBar;
             LoadHotels();
         }
 
@@ -100,9 +104,7 @@ namespace TravelMate
             catch (Exception ex)
             {
                 await DisplayAlert("Error", "An error occurred while loading the flight information.", "OK");
-            }
-            
-
+            }     
         }
 
         private async void LoadHotels()
@@ -114,7 +116,8 @@ namespace TravelMate
                 {
                     foreach (var hotel in hotels)
                     {
-                        Console.WriteLine($"Hotel: {hotel.HotelName}, Image Size: {hotel.LogoUrl.Length}");
+                        hotel.LogoUrl = hotel.LogoUrl?.Replace("Uri: ", "").Trim();
+                        Console.WriteLine($"Hotel: {hotel.HotelName}, Hotel Logo URL: {hotel.LogoUrl},Image Size: {hotel.LogoUrl.Length}");
 
                     }
                     HotelView.ItemsSource = hotels;
@@ -179,32 +182,6 @@ namespace TravelMate
                 }
             });
         }
-
-        private async void ShowMap(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new MapPage(userId));
-        }
-
-        private async void ShowHotels(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new MyHotelsPage(userId));
-        }
-
-        private async void ShowFlights(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new MyFlightsPage(userId));
-        }
-
-        private async void ShowHome(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new HomePage(userId));
-        }
-
-        private async void ShowProfileOptions(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new MyProfilePage(userId));
-        }
-
         private async void OnChecklistClicked(object sender, EventArgs e)
         {
             if(closestFlight == null)
@@ -212,12 +189,12 @@ namespace TravelMate
                 await DisplayAlert("No Upcoming Flights", "You need to have an upcoming flight to create a checklist.", "OK");
                 return;
             }
-            await Navigation.PushAsync(new ChecklistPage(userId, destination));
+            var checklistPage = new ChecklistPage(userId, destination);
+            await Navigation.PushAsync(new NavigationPage(checklistPage));
         }
         private async Task LoadWeatherInfo()
         {
-            Console.WriteLine($"home load  : lat {latitude} and long {longitude}");
-            var (currentTemp, locationAddress) = await WeatherService.GetWeather(longitude, latitude);
+            var (currentTemp, locationAddress) = await WeatherService.GetWeather(destination);
 
             if (currentTemp.HasValue)
             {
@@ -252,7 +229,18 @@ namespace TravelMate
 
         private async void OnConvertClicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new CurrencyConverterPage(userId));
+            var currencyConverterPage = new CurrencyConverterPage(userId,destination);
+            await Navigation.PushAsync(new NavigationPage(currencyConverterPage));
+        }
+
+        private async void ShowHotels(object sender, EventArgs e)
+        {
+            var hotelPage = new MyHotelsPage(userId,destination);
+            await Navigation.PushAsync(new NavigationPage(hotelPage));
+        }
+        private async void ShowMap(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new MapPage(userId, destination));
         }
 
     }

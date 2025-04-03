@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TravelMate.Models;
 using TravelMate.Services;
+using TravelMate.Controls;
 
 namespace TravelMate
 {
@@ -12,10 +13,13 @@ namespace TravelMate
     {
         private readonly int userId;
 
-        public MyHotelsPage(int userId)
+        public MyHotelsPage(int UserId,string destination)
         {
             InitializeComponent();
-            this.userId = userId;
+            userId = UserId;
+            Console.WriteLine($"in my hotels  page user id{userId} and destination is {destination}");
+            NavigationBar navBar = new NavigationBar(userId,destination);
+            NavigationContainer.Content = navBar;
             LoadHotels();
         }
 
@@ -30,7 +34,11 @@ namespace TravelMate
                     await DisplayAlert("No Hotels", "No future hotels found.", "OK");
                     return;
                 }
-
+                foreach (var hotel in hotels)
+                {
+                    hotel.LogoUrl = hotel.LogoUrl?.Replace("Uri: ", "").Trim();
+                    Console.WriteLine($"Hotel: {hotel.HotelName}, Cleaned Logo URL: {hotel.LogoUrl}");
+                }
                 // Sort by check-in date
                 var sortedHotels = hotels.OrderBy(h => DateTime.Parse(h.CheckInDate)).ToList();
                 HotelsCollectionView.ItemsSource = sortedHotels;
@@ -41,29 +49,9 @@ namespace TravelMate
             }
         }
 
-        private async void ShowMap(object sender, EventArgs e)
+        private async void addHotel(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new MapPage(userId));
-        }
-
-        private async void ShowHotels(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new MyHotelsPage(userId));
-        }
-
-        private async void ShowFlights(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new MyFlightsPage(userId));
-        }
-
-        private async void ShowHome(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new HomePage(userId));
-        }
-
-        private async void ShowProfileOptions(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new MyProfilePage(userId));
+            await Navigation.PushAsync(new NewHotelPage(userId));
         }
     }
 }

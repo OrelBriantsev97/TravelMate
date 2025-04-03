@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:TravelMate.Controls"
              x:Class="TravelMate.HomePage"
              NavigationPage.HasNavigationBar="False"
              BackgroundColor="#C1ECF5">
@@ -32,7 +33,7 @@
             </StackLayout>
         </Grid>
 
-        <!-- 🟢 Hotels Section -->
+        <!-- 🟢 Hotels Section & Features -->
         <Grid Grid.Row="1" Padding="10" VerticalOptions="FillAndExpand">
             <VerticalStackLayout Spacing="10">
 
@@ -44,7 +45,7 @@
                             <Frame BackgroundColor="White" CornerRadius="10" Margin="0" Padding="20" HasShadow="True"
                                    WidthRequest="360" HeightRequest="190">
                                 <StackLayout Spacing="0">
-                                    <Image Source="{Binding ImageUrl}" WidthRequest="100" HeightRequest="60"/>
+                                    <Image Source="{Binding LogoUrl}" WidthRequest="330" HeightRequest="70"  Aspect="AspectFill"/>
                                     <Label Text="{Binding HotelName}" FontAttributes="Bold" TextColor="#3b6069" FontSize="16"/>
                                     <Label Text="{Binding Address}" TextColor="Gray"/>
                                     <Label Text="{Binding Phone}" TextColor="Gray"/>
@@ -61,115 +62,65 @@
                         WidthRequest="150" HeightRequest="30" Margin="0,-15,0,0"
                         CornerRadius="20"/>
 
-                <!-- 🟢 Map Button -->
-                <Frame HeightRequest="150" WidthRequest="150" CornerRadius="10" Padding="5"
-                       BackgroundColor="#7CB3BE" HasShadow="True"
-                       HorizontalOptions="End" VerticalOptions="End" Margin="0,10,220,0">
-                    <StackLayout>
-                        <Label Text="Map" FontSize="14" FontAttributes="Bold" TextColor="Black" HorizontalOptions="Center" Margin="0,0,0,5"/>
-                        <Image Source="map_icon.png" HeightRequest="100" WidthRequest="100">
-                            <Image.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="ShowMap"/>
-                            </Image.GestureRecognizers>
-                        </Image>
-                    </StackLayout>
-                </Frame>
+                <!-- 🟢 Feature Grid -->
+                <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" Margin="0,10,0,0">
 
-                <!-- 🟢 Currency Converter -->
-                <Frame HeightRequest="90" WidthRequest="180" CornerRadius="10" Padding="5"
-                       BackgroundColor="#548C99" HasShadow="True" Margin="200,-160,0,0">
-                    <StackLayout>
-                        <Label Text="Currency Converter" FontSize="14" FontAttributes="Bold" TextColor="Black" HorizontalOptions="Center"/>
-                        <Image Source="convert_icon.png" HeightRequest="60" WidthRequest="60">
-                            <Image.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnConvertClicked"/>
-                            </Image.GestureRecognizers>
-                        </Image>
-                    </StackLayout>
-                </Frame>
+                    <!-- 🟢 First Row: Map & Weather -->
+                    <Frame Grid.Row="0" Grid.Column="0" HeightRequest="150" WidthRequest="150" CornerRadius="10" Padding="5"
+                            BackgroundColor="#7CB3BE" HasShadow="True" Margin="10,-27,0,0">
+                        <StackLayout>
+                            <Label Text="Map" FontSize="14" FontAttributes="Bold" TextColor="Black" HorizontalOptions="Center" />
+                            <Image Source="map_icon.png" HeightRequest="100" WidthRequest="100" Margin="0,5,0,0">
+                                <Image.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="ShowMap"/>
+                                </Image.GestureRecognizers>
+                            </Image>
+                        </StackLayout>
+                    </Frame>
 
-                <!-- 🟢 Weather Info -->
-                <Frame x:Name="WeatherFrame" Padding="10" CornerRadius="10" HasShadow="True"
-                       WidthRequest="180" HeightRequest="180" BackgroundColor="#B0D9E0"
-                       HorizontalOptions="Start" VerticalOptions="Start" Margin="205,0,0,0">
-                    <StackLayout HorizontalOptions="Center">
-                        <Label x:Name="WeatherCity" FontSize="14" FontAttributes="Bold" TextColor="Black"/>
-                        <Image x:Name="WeatherIcon" WidthRequest="50" HeightRequest="50"/>
-                        <Label x:Name="WeatherTemp" FontSize="16" TextColor="Black"/>
-                    </StackLayout>
-                </Frame>
+                    <Frame Grid.Row="0" Grid.Column="1" x:Name="WeatherFrame" Padding="10" CornerRadius="10" HasShadow="True"
+           WidthRequest="180" HeightRequest="180" BackgroundColor="#B0D9E0" Margin="0,-5,10,0">
+                        <StackLayout HorizontalOptions="Center">
+                            <Label x:Name="WeatherCity" FontSize="14" FontAttributes="Bold" TextColor="Black"/>
+                            <Image x:Name="WeatherIcon" WidthRequest="50" HeightRequest="50"/>
+                            <Label x:Name="WeatherTemp" FontSize="16" TextColor="Black"/>
+                        </StackLayout>
+                    </Frame>
 
-                <!-- 🟢 Checklist -->
-                <Frame HeightRequest="110" WidthRequest="150" CornerRadius="10" Padding="5"
-                       BackgroundColor="#D6F1F8" HasShadow="True"
-                       Margin="-200,-120,0,0">
-                    <StackLayout>
-                        <Label Text="Checklist" FontSize="14" FontAttributes="Bold" TextColor="Black" HorizontalOptions="Center" Margin="0,0,0,5"/>
-                        <Image Source="checklist_icon.png" HeightRequest="60" WidthRequest="60">
-                            <Image.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnChecklistClicked"/>
-                            </Image.GestureRecognizers>
-                        </Image>
-                    </StackLayout>
-                </Frame>
+                    <!-- 🟢 Second Row: Checklist & Currency Converter -->
+                    <Frame Grid.Row="1" Grid.Column="0" HeightRequest="110" WidthRequest="150" CornerRadius="10" Padding="5"
+           BackgroundColor="#D6F1F8" HasShadow="True" Margin="10,-7,0,0">
+                        <StackLayout>
+                            <Label Text="Checklist" FontSize="14" FontAttributes="Bold" TextColor="Black" HorizontalOptions="Center"/>
+                            <Image Source="checklist_icon.png" HeightRequest="60" WidthRequest="60">
+                                <Image.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnChecklistClicked"/>
+                                </Image.GestureRecognizers>
+                            </Image>
+                        </StackLayout>
+                    </Frame>
+
+                    <Frame Grid.Row="1" Grid.Column="1" HeightRequest="90" WidthRequest="180" CornerRadius="10" Padding="5"
+           BackgroundColor="#548C99" HasShadow="True" Margin="-5,15,0,0">
+                        <StackLayout>
+                            <Label Text="Currency Converter" FontSize="14" FontAttributes="Bold" TextColor="Black" HorizontalOptions="Center"/>
+                            <Image Source="convert_icon.png" HeightRequest="60" WidthRequest="60">
+                                <Image.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnConvertClicked"/>
+                                </Image.GestureRecognizers>
+                            </Image>
+                        </StackLayout>
+                    </Frame>
+
+                </Grid>
+            
 
             </VerticalStackLayout>
         </Grid>
 
         <!-- 🟢 Bottom Navigation Bar -->
-        <Grid Grid.Row="2" BackgroundColor="#6da7b5" HeightRequest="70">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <!-- My Hotels -->
-            <StackLayout Grid.Column="4" VerticalOptions="Center" HorizontalOptions="Center">
-                <Image Source="hotel.png" HeightRequest="30" WidthRequest="30">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="ShowHotels"/>
-                    </Image.GestureRecognizers>
-                </Image>
-                <Label Text="My Hotels" FontSize="12" TextColor="Black"/>
-            </StackLayout>
-
-            <!-- My Flights -->
-            <StackLayout Grid.Column="3" VerticalOptions="Center" HorizontalOptions="Center">
-                <Image Source="airplain_icon.png" HeightRequest="30" WidthRequest="30">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="ShowFlights"/>
-                    </Image.GestureRecognizers>
-                </Image>
-                <Label Text="My Flights" FontSize="12" TextColor="Black"/>
-            </StackLayout>
-
-            <!-- Home -->
-            <StackLayout Grid.Column="2" VerticalOptions="Center" HorizontalOptions="Center">
-                <Image Source="home_icon.png" HeightRequest="35" WidthRequest="35">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="ShowHome"/>
-                    </Image.GestureRecognizers>
-                </Image>
-                <Label Text="Home" FontSize="12" TextColor="Black"/>
-            </StackLayout>
-            <!-- Placeholder (Future Feature) -->
-            <StackLayout Grid.Column="1" VerticalOptions="Center" HorizontalOptions="Center">
-                <Image Source="question_icon.png" HeightRequest="30" WidthRequest="30"/>
-                <Label Text="Coming Soon" FontSize="12" TextColor="Gray"/>
-            </StackLayout>
-
-            <!-- Profile -->
-            <StackLayout Grid.Column="0" VerticalOptions="Center" HorizontalOptions="Center">
-                <Image Source="user_icon.png" HeightRequest="30" WidthRequest="30">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="ShowProfileOptions"/>
-                    </Image.GestureRecognizers>
-                </Image>
-                <Label Text="Profile" FontSize="12" TextColor="Black"/>
-            </StackLayout>
+        <Grid Grid.Row="2">
+            <ContentView x:Name="NavigationContainer"/>
         </Grid>
 
     </Grid>

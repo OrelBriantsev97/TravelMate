@@ -23,6 +23,7 @@ namespace TravelMate
                     _database.CreateTable<Flight>();
                     _database.CreateTable<Hotel>();
                     _database.CreateTable<Checklist>();
+                    _database.CreateTable<Place>();
 
                 }
                 catch (Exception ex)
@@ -158,5 +159,67 @@ namespace TravelMate
             var db = await GetDatabase();
             db.Update(item);
         }
+
+        public static async Task DeleteChecklistItem(Checklist item)
+        {
+            var db = await GetDatabase();
+            db.Delete(item);
+        }
+
+        public static async Task<List<Place>> GetPlaces(int userId, string category)
+        {
+            var db = await GetDatabase();
+            return db.Table<Place>()
+                .Where(p => p.UserId == userId && p.Category == category)
+                .ToList();
+        }
+
+        public static async Task AddPlaces(List<Place> places)
+        {
+            var db = await GetDatabase();
+            db.InsertAll(places);
+        }
+
+        public static async Task<bool> UpdateUserName(int userId, string newName)
+        {
+            var db = await GetDatabase();
+
+            var user = db.Table<User>().FirstOrDefault(u => u.Id == userId);
+
+            if (user != null)
+            {
+                user.Name = newName; // Update the user's name
+                db.Update(user); // Save the updated user back to the database
+                return true; // Return true if the update was successful
+            }
+
+            return false; // Return false if user was not found
+        }
+
+        public static async Task<bool> UpdateUserPassword(int userId, string oldPassword, string newPassword)
+        {
+            var db = await GetDatabase();
+
+            var user = db.Table<User>().FirstOrDefault(u => u.Id == userId);
+
+            if (user != null)
+            {
+                // Check if the old password is correct
+                if (user.Password == oldPassword)
+                {
+                    user.Password = newPassword; // Update the user's password
+                    db.Update(user); // Save the updated user back to the database
+                    return true; // Return true if the password was updated
+                }
+                else
+                {
+                    return false; // Return false if the old password does not match
+                }
+            }
+
+            return false; // Return false if user was not found
+        }
+
+
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using Microsoft.Maui.Controls;
+using TravelMate.Controls;
 
 namespace TravelMate
 {
@@ -9,10 +10,12 @@ namespace TravelMate
     {
         public int userId { get; set; }
 
-        public MyFlightsPage(int userID)
+        public MyFlightsPage(int userID,string destination)
         {
             InitializeComponent();
             userId = userID;
+            var navBar = new NavigationBar(userId, destination);
+            NavigationContainer.Content = navBar;
             LoadFlights();
         }
 
@@ -32,25 +35,9 @@ namespace TravelMate
             }
         }
 
-        // Navigation methods for the bottom navigation bar
-        private async void ShowHotels(object sender, EventArgs e)
+        private void addFlight(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new MyHotelsPage(userId));
-        }
-
-        private async void ShowFlights(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new MyFlightsPage(userId));
-        }
-
-        private async void ShowHome(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new HomePage(userId));
-        }
-
-        private async void ShowProfileOptions(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new MyProfilePage(userId)); 
+             Navigation.PushAsync(new NewFlightPage(userId));
         }
     }
 }

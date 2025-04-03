@@ -11,9 +11,10 @@ namespace TravelMate.Services
         private const string ApiKey = "R9E3B83PHVA6XFK8XDH8STPLF";
         private const string BaseUrl = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline";
 
-        public static async Task<(double? temperature, string address)> GetWeather(double latitude, double longitude)
+        public static async Task<(double? temperature, string address)> GetWeather(string location)
         {
-            string url = $"{BaseUrl}/{latitude},{longitude}/?key={ApiKey}";
+            string url = $"{BaseUrl}/{location}/?key={ApiKey}";
+
             var response = await _httpClient.GetAsync(url);
 
             if (!response.IsSuccessStatusCode)

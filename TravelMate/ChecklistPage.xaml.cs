@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Maui.Controls;
 using TravelMate.Models;
+using TravelMate.Controls;
 
 namespace TravelMate
 {
@@ -11,22 +13,24 @@ namespace TravelMate
     {
         private readonly int userId;
         private readonly string dest;
-        private List<Checklist> checklistItems;
+        private ObservableCollection<ChecklistGroup> groupedChecklistItems;
 
-        public ChecklistPage(int userId, string destination)
+        public ChecklistPage(int UserId, string destination)
         {
             InitializeComponent();
-            this.userId = userId;
+            this.userId = UserId;
             this.dest = destination;
-
+            var navBar = new NavigationBar(userId, destination);
+            NavigationContainer.Content = navBar;
             LoadChecklist();
         }
 
         private async void LoadChecklist()
         {
             checklistLabel.Text = $"Checklist for {dest}";
-            checklistItems = await DatabaseHelper.GetChecklist(userId, dest);
+            var checklistItems = await DatabaseHelper.GetChecklist(userId, dest);
 
+            // If checklist is empty, insert default items
             if (!checklistItems.Any())
             {
                 checklistItems = new List<Checklist>
@@ -42,10 +46,13 @@ namespace TravelMate
                     await DatabaseHelper.AddChecklistItem(item);
             }
 
-            var groupedChecklist = checklistItems.GroupBy(item => item.Category).Select(g => new ChecklistGroup(g.Key, g.ToList()))
-                            .ToList();
+            // Convert list to grouped format
+            groupedChecklistItems = new ObservableCollection<ChecklistGroup>(
+                checklistItems.GroupBy(item => item.Category)
+                .Select(g => new ChecklistGroup(g.Key, g.ToList()))
+            );
 
-            ChecklistListView.ItemsSource = groupedChecklist;
+            ChecklistView.ItemsSource = groupedChecklistItems;
         }
 
         private async void OnAddItemClicked(object sender, EventArgs e)
@@ -53,7 +60,9 @@ namespace TravelMate
             string itemName = await DisplayPromptAsync("Add Item", "Enter the item name:");
             if (string.IsNullOrEmpty(itemName)) return;
 
-            string category = await DisplayActionSheet("Select Category", "Cancel", null, "Important", "Clothes", "Electronics", "Health & Medications", "Money & Documents", "Miscellaneous");
+            string category = await DisplayActionSheet("Select Category", "Cancel", null,
+                "Important", "Clothes", "Electronics", "Health & Medications", "Money & Documents", "Miscellaneous");
+
             if (category == "Cancel") return;
 
             var newItem = new Checklist
@@ -66,44 +75,73 @@ namespace TravelMate
             };
 
             await DatabaseHelper.AddChecklistItem(newItem);
-            checklistItems.Add(newItem);
-            var groupedChecklist = checklistItems .GroupBy(item => item.Category).Select(g => new ChecklistGroup(g.Key, g.ToList()))
-                                    .ToList();
 
-            ChecklistListView.ItemsSource = null;
-            ChecklistListView.ItemsSource = groupedChecklist;
+            // Find existing category group or create a new one
+            var categoryGroup = groupedChecklistItems.FirstOrDefault(g => g.Key == category);
+            if (categoryGroup == null)
+            {
+                categoryGroup = new ChecklistGroup(category, new List<Checklist> { newItem });
+                groupedChecklistItems.Add(categoryGroup);
+            }
+            else
+            {
+                categoryGroup.Add(newItem);
+            }
         }
+
+        private async void OnDeleteItem(object sender, EventArgs e)
+        {
+            if (sender is SwipeItem swipeItem && swipeItem.CommandParameter is Checklist item)
+            {
+                bool confirm = await DisplayAlert("Delete Item", $"Are you sure you want to delete '{item.Item}'?", "Yes", "No");
+                if (!confirm) return;
+
+                await DatabaseHelper.DeleteChecklistItem(item);
+
+                // Remove from UI
+                var categoryGroup = groupedChecklistItems.FirstOrDefault(g => g.Key == item.Category);
+                if (categoryGroup != null)
+                {
+                    categoryGroup.Remove(item);
+                    if (categoryGroup.Count == 0)
+                    {
+                        groupedChecklistItems.Remove(categoryGroup);
+                    }
+                }
+            }
+        }
+
+
+        private void ToggleCategoryExpand(object sender, EventArgs e)
+        {
+            if (sender is Image image && image.BindingContext is ChecklistGroup group)
+            {
+                group.IsExpanded = !group.IsExpanded;
+                ChecklistView.ItemsSource = null; 
+                ChecklistView.ItemsSource = groupedChecklistItems;
+            }
+        }
+
 
         private async void OnItemCheckedChanged(object sender, CheckedChangedEventArgs e)
         {
-            var checkbox = (CheckBox)sender;
-            var item = (Checklist)checkbox.BindingContext;
-            item.IsChecked = e.Value;
-            await DatabaseHelper.UpdateChecklistItem(item);
-        }
-        private async void ShowMap(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new MapPage(userId));
+            if (sender is CheckBox checkbox && checkbox.BindingContext is Checklist item)
+            {
+                item.IsChecked = e.Value;
+                await DatabaseHelper.UpdateChecklistItem(item);
+            }
         }
 
-        private async void ShowHotels(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new MyHotelsPage(userId));
-        }
+    }
 
-        private async void ShowFlights(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new MyFlightsPage(userId));
-        }
+    public class ChecklistGroup : ObservableCollection<Checklist>
+    {
+        public string Key { get; }
+        public bool IsExpanded { get; set; } = true;
 
-        private async void ShowHome(object sender, EventArgs e)
+        public ChecklistGroup(string key, List<Checklist> items) : base(items)
         {
-            await Navigation.PushAsync(new HomePage(userId));
-        }
-
-        private async void ShowProfileOptions(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new MyProfilePage(userId));
+            Key = key;
         }
     }
 }

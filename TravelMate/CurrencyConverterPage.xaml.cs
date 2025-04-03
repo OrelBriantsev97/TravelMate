@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using TravelMate.Services;
 using Microsoft.Maui.Controls;
+using TravelMate.Controls;
 
 namespace TravelMate
 {
@@ -12,10 +13,12 @@ namespace TravelMate
         private string baseCurrency = "USD";
         private readonly int userId;
 
-        public CurrencyConverterPage(int UserId)
+        public CurrencyConverterPage(int UserId, string destination)
         {
             InitializeComponent();
             userId = UserId;
+            NavigationBar navBar = new NavigationBar(userId,destination);
+            NavigationContainer.Content = navBar;
             LoadExchangeRates();
         }
 
@@ -74,29 +77,5 @@ namespace TravelMate
             LoadExchangeRates();
         }
 
-        private async void ShowMap(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new MapPage(userId));
-        }
-
-        private async void ShowHotels(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new MyHotelsPage(userId));
-        }
-
-        private async void ShowFlights(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new MyFlightsPage(userId));
-        }
-
-        private async void ShowHome(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new HomePage(userId));
-        }
-
-        private async void ShowProfileOptions(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new MyProfilePage(userId));
-        }
     }
 }

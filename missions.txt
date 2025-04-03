@@ -1,6 +1,11 @@
-1.add users to new db
-2. add function to show users/hotels/flights in WPF
-3.fix mappage and finish design to homepage
+1.add navigation bar to all missing pages : places, 
+2.fix places and check destination in home page : 
+3.make app run faster
+4.checklist fix
+5.check for missing icons,programming conventions , design patter etc
+
+
+		
 
 
 

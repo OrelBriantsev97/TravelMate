@@ -31,9 +31,7 @@ namespace TravelMate
             InitializeComponent();
             NavigationPage.SetHasNavigationBar(this, false);
             userId = userID;
-            //  airportIds = new List<string>(airportOptions);
-            //AirportListOrigin.ItemsSource = airportIds;
-            //AirportListDest.ItemsSource = airportIds;
+      
             airportItems = airportOptions.Select(option =>
             {
                 var parts = option.Split(" - ");

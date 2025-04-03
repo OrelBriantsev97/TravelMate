@@ -1,106 +1,81 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:TravelMate.Controls"         
              x:Class="TravelMate.ChecklistPage"
              NavigationPage.HasNavigationBar="False"
              BackgroundColor="#C1ECF5">
 
-    <Grid RowDefinitions="*, Auto">
-        <StackLayout Grid.Row="0" Padding="20" Spacing="15" Margin="0,70,0,0">
-            <Label x:Name="checklistLabel" FontSize="30" FontAttributes="Bold" TextColor="#32545c" FontFamily ="sans-serif"
-                   HorizontalOptions="Center"/>
+    <StackLayout Padding="10">
 
-            <ListView x:Name="ChecklistListView" HasUnevenRows="True" IsGroupingEnabled="True"
-          GroupDisplayBinding="{Binding Key}">
-                <ListView.GroupHeaderTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <Label Text="{Binding Key}" FontSize="20" FontAttributes="Bold" 
-                       TextColor="#32545c" FontFamily="PlayWrite" Padding="10"/>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.GroupHeaderTemplate>
+        <!-- ✅ Page Title -->
+        <Label x:Name="checklistLabel" Text="Travel Checklist" FontSize="36"  FontFamily="Chi"
+               FontAttributes="Bold" TextColor="#32545c" HorizontalOptions="Center" Margin="0,70,0,0"/>
 
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <SwipeView>
-                                <SwipeView.RightItems>
-                                    <SwipeItems Mode="Reveal">
-                                        <SwipeItem Text="Delete" BackgroundColor="Red" 
-                                       Command="{Binding DeleteCommand}" CommandParameter="{Binding .}">
-                                            <SwipeItem.IconImageSource>
-                                                <FileImageSource File="trash_icon.png"/>
-                                            </SwipeItem.IconImageSource>
-                                        </SwipeItem>
-                                    </SwipeItems>
-                                </SwipeView.RightItems>
-                                <StackLayout Orientation="Horizontal" Padding="10">
-                                    <CheckBox IsChecked="{Binding IsChecked}" VerticalOptions="Center" Color="#32545c"
-                                  CheckedChanged="OnItemCheckedChanged"/>
-                                    <Label Text="{Binding Item}" FontSize="18" VerticalOptions="Center"/>
-                                </StackLayout>
-                            </SwipeView>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+        <ListView x:Name="ChecklistView"
+          ItemsSource="{Binding groupedChecklistItems}"
+          IsGroupingEnabled="True"
+          HasUnevenRows="True"
+          BackgroundColor="#C1ECF5"
+          SeparatorVisibility="None">
 
+            <!-- ✅ Expandable Category Headers -->
+            <ListView.GroupHeaderTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Orientation="Horizontal" Padding="10">
+                            <Label Text="{Binding Key}" FontFamily="PlayWrite" FontSize="20" FontAttributes="Bold" 
+                           TextColor="#32545c" />
+                            <Image Source="{Binding IsExpanded, Converter={StaticResource ExpandCollapseIconConverter}}"
+                           HeightRequest="20" WidthRequest="20">
+                                <Image.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="ToggleCategoryExpand" CommandParameter="{Binding .}"/>
+                                </Image.GestureRecognizers>
+                            </Image>
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.GroupHeaderTemplate>
 
+            <!-- ✅ Swipe-to-delete Checklist Items -->
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <SwipeView>
+                            <SwipeView.RightItems>
+                                <SwipeItems Mode="Execute">
+                                    <SwipeItem Text="Delete" BackgroundColor="Red"
+                                       Invoked="OnDeleteItem" CommandParameter="{Binding .}"/>
+                                </SwipeItems>
+                            </SwipeView.RightItems>
 
-            <Button Text="Add Item" Clicked="OnAddItemClicked" BackgroundColor="#7ea3ab"
-                    TextColor="White" FontSize="16" CornerRadius="10" HeightRequest="50"/>
+                            <Grid Padding="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- ✅ Checkbox -->
+                                <CheckBox IsChecked="{Binding IsChecked}" Color="#32545c" 
+                                  CheckedChanged="OnItemCheckedChanged" Grid.Column="0"/>
+
+                                <!-- ✅ Checklist Item Text -->
+                                <Label Text="{Binding Item}" FontSize="18" Margin="0,8,0,0"
+                               TextColor="Black" Grid.Column="1"/>
+                            </Grid>
+                        </SwipeView>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+
+        </ListView>
+        <StackLayout Orientation="Horizontal" Padding="10">
+            <Entry x:Name="NewItemEntry" Placeholder="Add new item..." FontSize="18" WidthRequest="250" />
+            <Button Text="+" Clicked="OnAddItemClicked" BackgroundColor="#32545c" Margin="10,0,0,0"/>
         </StackLayout>
 
-        <Grid Grid.Row="1" BackgroundColor="#6da7b5" HeightRequest="70">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <StackLayout Grid.Column="4" VerticalOptions="Center" HorizontalOptions="Center">
-                <Image Source="hotel.png" HeightRequest="30" WidthRequest="30">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="ShowHotels"/>
-                    </Image.GestureRecognizers>
-                </Image>
-                <Label Text="My Hotels" FontSize="12" TextColor="Black"/>
-            </StackLayout>
-
-            <StackLayout Grid.Column="3" VerticalOptions="Center" HorizontalOptions="Center" >
-                <Image Source="airplain_icon.png" HeightRequest="30" WidthRequest="30">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="ShowFlights"/>
-                    </Image.GestureRecognizers>
-                </Image>
-                <Label Text="My Flights" FontSize="12" TextColor="Black" />
-            </StackLayout>
-
-            <StackLayout Grid.Column="2" VerticalOptions="Center" HorizontalOptions="Center">
-                <Image Source="home_icon.png" HeightRequest="35" WidthRequest="35">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="ShowHome"/>
-                    </Image.GestureRecognizers>
-                </Image>
-                <Label Text="Home" FontSize="12" TextColor="Black"/>
-            </StackLayout>
-
-            <StackLayout Grid.Column="1" VerticalOptions="Center" HorizontalOptions="Center">
-                <Image Source="question_icon.png" HeightRequest="30" WidthRequest="30"/>
-                <Label Text="Coming Soon" FontSize="12" TextColor="Gray"/>
-            </StackLayout>
-
-            <StackLayout Grid.Column="0" VerticalOptions="Center" HorizontalOptions="Center">
-                <Image Source="user_icon.png" HeightRequest="30" WidthRequest="30">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="ShowProfileOptions"/>
-                    </Image.GestureRecognizers>
-                </Image>
-                <Label Text="Profile" FontSize="12" TextColor="Black"/>
-            </StackLayout>
+        <Grid Grid.Row="2">
+            <ContentView x:Name="NavigationContainer"/>
         </Grid>
-    </Grid>
+    </StackLayout>
 </ContentPage>

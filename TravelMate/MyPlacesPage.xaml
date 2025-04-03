@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:TravelMate.Controls"
+             NavigationPage.HasNavigationBar="False"
+             BackgroundColor="#C1ECF5"
+             x:Class="TravelMate.MyPlacesPage">
+
+    <Grid RowDefinitions="*, Auto">
+        <Label Text="Places" FontSize="36" FontAttributes="Bold" TextColor="#3b6069"
+       HorizontalOptions="Center" Margin="0,70,0,10" FontFamily="Chi"/>
+        <ScrollView Grid.Row="0">
+            <StackLayout Padding="20">
+                <!-- Attractions -->
+                <Label Text="Attractions" FontSize="24" FontAttributes="Bold" TextColor="#3b6069"
+                       FontFamily="Chi" Margin="0,120,0,5" />
+                <CollectionView x:Name="AttractionsCollectionView" ItemsLayout="HorizontalList">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame BackgroundColor="White" CornerRadius="10" Margin="5" Padding="10" HasShadow="True">
+                                <StackLayout>
+                                    <Image Source="{Binding Thumbnail}" WidthRequest="300" HeightRequest="120" Aspect="AspectFill"/>
+                                    <Label Text="{Binding Name}" FontAttributes="Bold" FontFamily="Chi" TextColor="#3b6069" FontSize="18"/>
+                                    <Label Text="{Binding Address}" TextColor="Gray" FontSize="14"/>
+                                    <Label Text="{Binding Rating}" TextColor="Green" FontSize="14"/>
+                                </StackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <!-- Restaurants -->
+                <Label Text="Restaurants" FontSize="24" FontAttributes="Bold" TextColor="#3b6069"
+                       FontFamily="Chi" Margin="0,20,0,5" />
+                <CollectionView x:Name="RestaurantsCollectionView" ItemsLayout="HorizontalList">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame BackgroundColor="White" CornerRadius="10" Margin="5" Padding="10" HasShadow="True">
+                                <StackLayout>
+                                    <Image Source="{Binding Thumbnail}" WidthRequest="310" HeightRequest="120" Aspect="AspectFill"/>
+                                    <Label Text="{Binding Name}" FontAttributes="Bold" FontFamily="Chi" TextColor="#3b6069" FontSize="18"/>
+                                    <Label Text="{Binding Address}" TextColor="Gray" FontSize="14"/>
+                                    <Label Text="{Binding Rating}" TextColor="Green" FontSize="14"/>
+                                </StackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <!-- Bars -->
+                <Label Text="Bars" FontSize="24" FontAttributes="Bold" TextColor="#3b6069"
+                       FontFamily="Chi" Margin="0,20,0,5" />
+                <CollectionView x:Name="BarsCollectionView" ItemsLayout="HorizontalList">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame BackgroundColor="White" CornerRadius="10" Margin="5" Padding="10" HasShadow="True">
+                                <StackLayout>
+                                    <Image Source="{Binding Thumbnail}" WidthRequest="290" HeightRequest="120" Aspect="AspectFill"/>
+                                    <Label Text="{Binding Name}" FontAttributes="Bold" FontFamily="Chi" TextColor="#3b6069" FontSize="18"/>
+                                    <Label Text="{Binding Address}" TextColor="Gray" FontSize="14"/>
+                                    <Label Text="{Binding Rating}" TextColor="Green" FontSize="14"/>
+                                </StackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </StackLayout>
+        </ScrollView>
+
+        <!-- Navigation Bar at the Bottom -->
+        <ContentView x:Name="NavigationContainer" Grid.Row="1"/>
+    </Grid>
+
+</ContentPage>

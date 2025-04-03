@@ -1,100 +1,62 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:TravelMate.Controls"
              x:Class="TravelMate.MyFlightsPage"
              NavigationPage.HasNavigationBar="False"
              BackgroundColor="#C1ECF5">
 
-    <Grid RowDefinitions="Auto,*,Auto">
+    <Grid RowDefinitions="Auto, *, Auto">
         <!-- Page Title -->
         <Label Text="My Flights" FontSize="36" FontAttributes="Bold" TextColor="#3b6069"
                HorizontalOptions="Center" Margin="0,70,0,10" FontFamily="Chi"/>
 
-        <!-- Flights List -->
-        <CollectionView x:Name="FlightsListView" ItemsSource="{Binding Flights}" Grid.Row="1"
-                        SelectionMode="None">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Frame BackgroundColor="White" CornerRadius="10" Margin="10" Padding="15" HasShadow="True">
-                        <StackLayout>
-                            <Label Text="{Binding FlightNumber}" FontFamily="Chi"  FontAttributes="Bold" TextColor="#3b6069" FontSize="22" HorizontalOptions="CenterAndExpand"/>
-                            <Label Text="{Binding Airline}" TextColor="Gray" HorizontalOptions="CenterAndExpand"/>
+        <!-- Scrollable Flights List -->
+        <ScrollView Grid.Row="1">
+            <!-- Wrapped StackLayout inside ScrollView -->
+            <StackLayout Padding="20">
+                <CollectionView x:Name="FlightsListView" ItemsSource="{Binding Flights}"
+                                SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame BackgroundColor="White" CornerRadius="10" Margin="10" Padding="15" HasShadow="True">
+                                <StackLayout>
+                                    <Label Text="{Binding FlightNumber}" FontFamily="Chi" FontAttributes="Bold" 
+                                           TextColor="#3b6069" FontSize="22" HorizontalOptions="CenterAndExpand"/>
+                                    <Label Text="{Binding Airline}" TextColor="Gray" HorizontalOptions="CenterAndExpand"/>
 
-                            <Grid ColumnDefinitions="Auto, *, Auto" VerticalOptions="Center" Margin="10,0">
-                                <Label Text="{Binding DepartureCity}" TextColor="Black" FontSize="16" Grid.Column="0" HorizontalTextAlignment="Start"/>
+                                    <Grid ColumnDefinitions="Auto, *, Auto" VerticalOptions="Center" Margin="10,0">
+                                        <Label Text="{Binding DepartureCity}" TextColor="Black" FontSize="16" Grid.Column="0" HorizontalTextAlignment="Start"/>
+                                        <BoxView Grid.Column="1" HeightRequest="1" WidthRequest="200" BackgroundColor="Gray" VerticalOptions="Center" HorizontalOptions="Fill"/>
+                                        <Label Text="{Binding ArrivalCity}" TextColor="Black" FontSize="16" Grid.Column="2" HorizontalTextAlignment="End"/>
+                                    </Grid>
+                                    <Grid ColumnDefinitions="Auto, *, Auto" VerticalOptions="Center" Margin="10,0">
+                                        <Label Text="{Binding DepartureDate}" TextColor="Black" FontSize="14" Grid.Column="0" HorizontalTextAlignment="Start" Margin="-10,0,0,0"/>
+                                        <Label Text="{Binding ArrivalDate}" TextColor="Black" FontSize="14" Grid.Column="2" HorizontalTextAlignment="End" Margin="0,0,-10,0"/>
+                                    </Grid>
+                                    <Grid ColumnDefinitions="Auto, *">
+                                        <Label Text="{Binding DepartureTime}" TextColor="Gray" FontSize="14" Grid.Column="0" HorizontalTextAlignment="Start"/>
+                                        <Label Text="{Binding ArrivalTime}" TextColor="Gray" FontSize="14" Grid.Column="1" HorizontalTextAlignment="End"/>
+                                    </Grid>
+                                    
+                                </StackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
 
-                                <BoxView Grid.Column="1" HeightRequest="1" WidthRequest="200" BackgroundColor="Gray" VerticalOptions="Center" HorizontalOptions="Fill"/>
+                <!-- Add New Flight Button -->
+                <Label Text="➕ Add New Flight" TextColor="Black" FontSize="18" FontFamily="Chi"
+                       FontAttributes="Bold" HorizontalOptions="Center" Margin="0,10,0,20">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="addFlight"/>
+                    </Label.GestureRecognizers>
+                </Label>
+            </StackLayout>
+        </ScrollView>
 
-                                <Label Text="{Binding ArrivalCity}" TextColor="Black" FontSize="16" Grid.Column="2" HorizontalTextAlignment="End"/>
-                            </Grid>
-
-                            <Grid ColumnDefinitions="Auto, *">
-                                <Label Text="{Binding DepartureTime}" TextColor="Gray" FontSize="14" Grid.Column="0" HorizontalTextAlignment="Start"/>
-                                <Label Text="{Binding ArrivalTime}" TextColor="Gray" FontSize="14" Grid.Column="1" HorizontalTextAlignment="End"/>
-                            </Grid>
-                        </StackLayout>
-                    </Frame>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-
-		<Grid Grid.Row="2" BackgroundColor="#6da7b5" HeightRequest="70">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="*" />
-				<ColumnDefinition Width="*" />
-				<ColumnDefinition Width="*" />
-				<ColumnDefinition Width="*" />
-				<ColumnDefinition Width="*" />
-			</Grid.ColumnDefinitions>
-
-			<!-- My Hotels -->
-			<StackLayout Grid.Column="4" VerticalOptions="Center" HorizontalOptions="Center">
-				<Image Source="hotel.png" HeightRequest="30" WidthRequest="30">
-					<Image.GestureRecognizers>
-						<TapGestureRecognizer Tapped="ShowHotels"/>
-					</Image.GestureRecognizers>
-				</Image>
-				<Label Text="My Hotels" FontSize="12" TextColor="Black"/>
-			</StackLayout>
-
-			<!-- My Flights -->
-			<StackLayout Grid.Column="3" VerticalOptions="Center" HorizontalOptions="Center" >
-				<Image Source="airplain_icon.png" HeightRequest="30" WidthRequest="30">
-					<Image.GestureRecognizers>
-						<TapGestureRecognizer Tapped="ShowFlights"/>
-					</Image.GestureRecognizers>
-				</Image>
-				<Label Text="My Flights" FontSize="12" TextColor="Black" />
-			</StackLayout>
-
-			<!-- Home -->
-			<StackLayout Grid.Column="2" VerticalOptions="Center" HorizontalOptions="Center">
-				<Image Source="home_icon.png" HeightRequest="35" WidthRequest="35">
-					<Image.GestureRecognizers>
-						<TapGestureRecognizer Tapped="ShowHome"/>
-					</Image.GestureRecognizers>
-				</Image>
-				<Label Text="Home" FontSize="12" TextColor="Black"/>
-			</StackLayout>
-
-			<!-- Placeholder (Future Feature) -->
-			<StackLayout Grid.Column="1" VerticalOptions="Center" HorizontalOptions="Center">
-				<Image Source="question_icon.png" HeightRequest="30" WidthRequest="30"/>
-				<Label Text="Coming Soon" FontSize="12" TextColor="Gray"/>
-			</StackLayout>
-
-			<!-- Profile -->
-			<StackLayout Grid.Column="0" VerticalOptions="Center" HorizontalOptions="Center">
-				<Image Source="user_icon.png" HeightRequest="30" WidthRequest="30">
-					<Image.GestureRecognizers>
-						<TapGestureRecognizer Tapped="ShowProfileOptions"/>
-					</Image.GestureRecognizers>
-				</Image>
-				<Label Text="Profile" FontSize="12" TextColor="Black"/>
-			</StackLayout>
-
-		</Grid>
-
+        <!-- Navigation Container -->
+        <Grid Grid.Row="2">
+            <ContentView x:Name="NavigationContainer"/>
+        </Grid>
     </Grid>
-
 </ContentPage>

@@ -3,13 +3,19 @@ using Mapsui.Tiling.Layers;
 using Mapsui.Tiling;
 using Mapsui.Projections;
 using Mapsui.UI.Maui;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TravelMate.Models;
 using BruTile.Predefined;
 using BruTile.Web;
 using Mapsui;
 using Mapsui.Styles;
-using NetTopologySuite.Index.HPRtree;
+using System;
+using System.Diagnostics;
+using System.Threading;
+using Microsoft.Maui.Dispatching;
+using TravelMate.Controls;
 
 namespace TravelMate
 {
@@ -19,10 +25,12 @@ namespace TravelMate
         private List<Hotel> hotels = new();
         private List<Flight> flights = new();
 
-        public MapPage(int userId)
+        public MapPage(int userId,string destination)
         {
             InitializeComponent();
             this.userId = userId;
+            var navBar = new NavigationBar(userId, destination);
+            NavigationContainer.Content = navBar;
             SetupMap();
         }
 
@@ -39,16 +47,18 @@ namespace TravelMate
 
             mapView.Map = new Mapsui.Map();
             mapView.Map.Layers.Add(tileLayer);
-            mapView.Map.Navigator.ZoomTo(100);
-            
+            mapView.Map.Navigator.ZoomTo(7);
+            mapView.Map.Home = n => n.ZoomTo(90);
+
             flights = await DatabaseHelper.GetFlightsByUserId(userId);
             hotels = await DatabaseHelper.GetHotelsByUserId(userId);
 
             if (flights.Any() || hotels.Any())
             {
+                await Task.Delay(500);
                 MainThread.BeginInvokeOnMainThread(LoadTripOverview);
                 MainThread.BeginInvokeOnMainThread(LoadHotelPins);
-                LoadHotelPins();
+                Debug.WriteLine($"Number of layers: {mapView.Map.Layers.Count}");
             }
             else
             {
@@ -58,22 +68,38 @@ namespace TravelMate
 
         private void LoadTripOverview()
         {
-            var tripEvents = new List<(DateTime Date, string Description)>();
+            var tripEvents = new List<TripEvent>();
 
+            // Add flights to trip overview
             foreach (var flight in flights)
             {
                 if (DateTime.TryParse(flight.DepartureDate, out DateTime flightDate))
                 {
-                    tripEvents.Add((flightDate, $"✈️ Flight {flight.FlightNumber} - {flightDate:MMM dd, yyyy}"));
+                    tripEvents.Add(new TripEvent
+                    {
+                        Date = flightDate,
+                        Icon = "✈️",
+                        Title = $"Flight {flight.FlightNumber}",
+                        Subtitle = $"{flightDate:MMM dd, yyyy} at {flight.DepartureTime:hh\\:mm tt}"
+                    });
                 }
             }
 
+            // Add hotels to trip overview
             int hotelNumber = 1;
             foreach (var hotel in hotels)
             {
-                if (DateTime.TryParse(hotel.CheckInDate, out DateTime checkInDate))
+                if (DateTime.TryParse(hotel.CheckInDate, out DateTime checkInDate) &&
+                    DateTime.TryParse(hotel.CheckOutDate, out DateTime checkOutDate))
                 {
-                    tripEvents.Add((checkInDate, $"🏨 {hotelNumber} → {hotel.HotelName} (Check-in: {checkInDate:MMM dd, yyyy})"));
+                    Debug.WriteLine($"Hotel: {hotel.HotelName}, Check-in: {hotel.CheckInDate}");
+                    tripEvents.Add(new TripEvent
+                    {
+                        Date = checkInDate,
+                        Icon = "🏕️",
+                        Title = $"{hotelNumber} → {hotel.HotelName}",
+                        Subtitle = $"Check In {checkInDate:MMM dd} → Check Out: {checkOutDate:MMM dd}"
+                    });
                     hotelNumber++;
                 }
             }
@@ -82,20 +108,15 @@ namespace TravelMate
 
             MainThread.BeginInvokeOnMainThread(() =>
             {
+
                 tripOverviewCollectionView.ItemsSource = sortedTripEvents;
             });
         }
-
-
 
         private void LoadHotelPins()
         {
             if (!hotels.Any()) return;
 
-            // Clear previous pins
-            mapView.Map.Layers.Remove(mapView.Map.Layers.FirstOrDefault(l => l.Name == "Hotel Pins"));
-
-            // Add new pins
             var pinLayer = new MemoryLayer("Hotel Pins")
             {
                 Features = hotels.Select((hotel, index) =>
@@ -126,13 +147,24 @@ namespace TravelMate
 
                 mapView.Map.Navigator.ZoomToBox(boundingBox);
             }
-
         }
 
-        private async void ShowMap(object sender, EventArgs e) => await Navigation.PushAsync(new MapPage(userId));
-        private async void ShowHotels(object sender, EventArgs e) => await Navigation.PushAsync(new MyHotelsPage(userId));
-        private async void ShowFlights(object sender, EventArgs e) => await Navigation.PushAsync(new MyFlightsPage(userId));
-        private async void ShowHome(object sender, EventArgs e) => await Navigation.PushAsync(new HomePage(userId));
-        private async void ShowProfileOptions(object sender, EventArgs e) => await Navigation.PushAsync(new MyProfilePage(userId));
+        private void ZoomIn(object sender, EventArgs e)
+        {
+            mapView.Map.Navigator.ZoomIn();
+        }
+
+        private void ZoomOut(object sender, EventArgs e)
+        {
+            mapView.Map.Navigator.ZoomOut();
+        }
+    }
+
+    public class TripEvent
+    {
+        public DateTime Date { get; set; }
+        public string Icon { get; set; } 
+        public string Title { get; set; } 
+        public string Subtitle { get; set; }
     }
 }
