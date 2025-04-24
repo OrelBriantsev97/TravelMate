@@ -2,14 +2,25 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using TravelMate.Models;
 
 namespace TravelMate.Services
 {
+    // Provides functionality for retrieving hotel details from the Google Hotels API via SerpApi.
     public static class HotelService
     {
         private const string ApiKey = "90a7e3bc24bfeb081ad2f4bab00f252e396a3b555b066ad6b71b4809d1d23a60"; 
-        private const string ApiUrl = "https://serpapi.com/search?engine=google_hotels"; 
+        private const string ApiUrl = "https://serpapi.com/search?engine=google_hotels";
 
+        // Retrieves hotel details based on the specified name and booking dates.
+        // <param name="name">
+        // The hotel name or search query (e.g., "Hilton Tel Aviv"). </param>
+        // <param name="checkIn">
+        // Desired check‑in date as a string formatted "yyyy-MM-dd".</param>
+        // <param name="checkOut">
+        // Desired check‑out date as a string formatted "yyyy-MM-dd". </param>
+        // <returns> / A <see cref="List{HotelDetails}"/> containing up to one matching hotel’s details,
+        // or <c>null</c> if the response was empty or no hotels were found. </returns>
         public static async Task<List<HotelDetails>> GetHotelDetailsAsync(string name, string checkIn, string checkOut)
         {
             var client = new HttpClient();
@@ -82,35 +93,11 @@ namespace TravelMate.Services
             return hotelList;
         }
 
+        // Represents the structure of a hotel-search response
         public class HotelApiResponse
         {
             public List<HotelDetails> Data { get; set; }
         }
 
-        public class HotelDetails
-        {
-            public string HotelName { get; set; }
-            public string Address { get; set; }
-            public string Phone { get; set; }
-            public string CheckInTime { get; set; }
-            public string CheckOutTime { get; set; }    
-            public string LogoUrl { get; set; }
-            public double Rate { get; set; }
-            public string NearbyPlaces { get; set; }
-            public double Latitude { get; set; }
-            public double Longitude { get; set; }
-            public List<string> Amenities { get; set; }
-            public int HotelClass { get; set;}
-
-            public ObservableCollection<string> HotelClassStars
-            {
-                get
-                {
-                    return new ObservableCollection<string>(Enumerable.Repeat("star_icon.png", HotelClass));
-                }
-            }
-
-
-        }
     }
 }

@@ -1,271 +1,118 @@
-﻿using Microsoft.Maui.ApplicationModel.Communication;
-using Microsoft.Maui.Controls;
-using System.Globalization;
-using TravelMate.Models;
-using TravelMate.Services;
-using System.Diagnostics;
-
+﻿using Microsoft.Maui.Controls;
+using System;
+using System.ComponentModel;
+using System.Linq;
+using TravelMate.ViewModels;
 
 namespace TravelMate
 {
     public partial class NewFlightPage : ContentPage
     {
-        public int userId { get; set; }
-        public class AirportItem // Create a class to hold the city name
-        {
-            public string CityName { get; set; }
-            public string FullString { get; set; } // Store the original string if needed
-        }
-        private List<AirportItem> airportItems;
+        private NewFlightViewModel _viewModel;
 
-        private readonly List<string> airportOptions = new List<string>
-        {
-            "Tel Aviv - TLV","New York - JFK","Los Angeles - LAX","London - LHR","Paris - CDG","Tokyo - HND","Berlin - BER","Sydney - SYD","Dubai - DXB","Abu Dhabi - AUH","Rome - FCO",
-            "Bangkok - BKK","Phuket - HKT","Krabi - KBV","Samui - USM","Chiang Mai - CNX","Manila - MNL","Cebu - CEB","Singapore - SIN",
-            "Hanoi - HAN","Ho Chi Minh City - SGN","Vientiane - VTE","Rio de Janeiro - GIG","São Paulo - GRU","Buenos Aires - EZE","Lima - LIM","Quito - UIO",
-            "Montevideo - MVD"
-        };
-
-        public NewFlightPage(int userID) 
+        public NewFlightPage(int userId)
         {
             InitializeComponent();
             NavigationPage.SetHasNavigationBar(this, false);
-            userId = userID;
-      
-            airportItems = airportOptions.Select(option =>
-            {
-                var parts = option.Split(" - ");
-                return new AirportItem
-                {
-                    CityName = parts[0], // City name
-                    FullString = option // The whole string
-                };
-            }).ToList();
+            _viewModel = new NewFlightViewModel(userId, Navigation);
+            BindingContext = _viewModel;
 
-            AirportListOrigin.ItemsSource = airportItems; // Set the ItemSource to the new list
-            AirportListDest.ItemsSource = airportItems;
-
+            _viewModel.PropertyChanged += ViewModel_PropertyChanged;
         }
 
-        private async void OnSearchFlightClicked(object sender, EventArgs e)
+        private void ViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var flightNumber = FlightNumberEntry.Text;
-            var departureDate = DepartureDatePicker.Date;
-            var origin = ExtractAirportCode(OriginEntry.Text);
-            var destination = ExtractAirportCode(DestinationEntry.Text);
-                    
-            string errorMessage = ValidationHelper.ValidateFlightEntries(flightNumber, origin, destination);
-            if (!string.IsNullOrEmpty(errorMessage))
+            if (e.PropertyName == nameof(_viewModel.SelectedFlight) && _viewModel.SelectedFlight != null)
             {
-                await DisplayAlert("Error", errorMessage, "OK");
-                return;
-            }
+                var flight = _viewModel.SelectedFlight;
 
-            try
-            { 
-                var flightDetails = await FlightService.GetFlightDetailsAsync(flightNumber, origin,destination,departureDate);
+                AirlineLabel.Text = flight.Airline ?? "N/A";
+                DepartureTimeLabel.Text = flight.Departure?.Time?.Substring(11, 5) ?? "N/A";
+                ArrivalTimeLabel.Text = flight.Arrival?.Time?.Substring(11, 5) ?? "N/A";
+                OriginLabel.Text = flight.Departure?.Id ?? "N/A";
+                DepartureDateLabel.Text = flight.Departure?.Time?.Substring(0, 10) ?? "";
+                DestinationLabel.Text = flight.Arrival?.Id ?? "N/A";
+                ArrivalDateLabel.Text = flight.Arrival?.Time?.Substring(0, 10) ?? "";
+                DurationLabel.Text = $"Duration: {_viewModel.FormatDuration(flight.Duration)}";
 
-                if (flightDetails == null)
-                {
-                    await DisplayAlert("No Results", "No flight details found for the provided information.", "OK");
-                    FlightDetailsLayout.IsVisible = false;
-                }
-                else
-                {
-                    var flight = flightDetails;
-
-                    OriginLabel.Text = flight.Departure.Id ?? "N/A";
-                    DestinationLabel.Text = flight.Arrival?.Id ?? "N/A";
-                    AirlineLabel.Text = flight.Airline ?? "N/A";
-
-                    ExtractFlightHours(flight);
-                    calcDuration(flight);
-                    FlightDetailsLayout.IsVisible = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                // Handle exceptions like API errors or parsing issues
-                await DisplayAlert("Error", $"An error occurred: {ex.Message}", "OK");
+                FlightDetailsLayout.IsVisible = true;
             }
         }
-
-        // Event handler for when a flight is selected
-        private async void OnFlightTapped(object sender, EventArgs e)
+        private void OnOriginFocused(object sender, FocusEventArgs e)
         {
-            var flightNumber = FlightNumberEntry.Text;
-            var answer = await DisplayAlert("Add Flight", "Do you want to add this flight to your trip?", "Yes", "No");
-            if (answer)
-            {
-
-                var flight = new Flight
-                {
-                    UserId = userId,
-                    FlightNumber = flightNumber,
-                    DepartureTime = DepartureTimeLabel.Text ?? "N/A",
-                    DepartureDate = DepartureDateLabel.Text ?? "N/A",
-                    ArrivalTime = ArrivalTimeLabel.Text ?? "N/A",
-                    ArrivalDate = ArrivalDateLabel.Text ?? "N/A",
-                    DepartureCity = OriginLabel.Text ?? "N/A",
-                    ArrivalCity = DestinationLabel.Text ?? "N/A",
-                    Duration = DurationLabel.Text ?? "N/A",
-                    Airline = AirlineLabel.Text ?? "N/A"
-
-                };
-                DatabaseHelper.AddFlight(flight, userId);
-                await DisplayAlert("Success", "Flight added to your trip!", "OK");
-                bool addAnotherFlight = await DisplayAlert("Add Another Flight?", "Do you want to add another flight?", "Yes", "No");
-
-                if (addAnotherFlight)
-                {
-                    FlightNumberEntry.Text = string.Empty;
-                    DepartureDatePicker.Date = DateTime.Now;
-
-                    OriginEntry.Text = string.Empty;
-                    DestinationEntry.Text = string.Empty;
-
-                    AirportListOrigin.IsVisible = false;
-                    AirportListDest.IsVisible = false;
-                }
-                else
-                {
-                    await Navigation.PushAsync(new NewHotelPage(userId));
-                }
-            }
+            AirportListOrigin.IsVisible = true;
+            AirportListDest.IsVisible = false;
         }
 
-        private void ExtractFlightHours(FlightDetails flight)
+        private void OnDestinationFocused(object sender, FocusEventArgs e)
         {
-            DateTime departureDateTime, arrivalDateTime;
-
-            // Extract departure time
-            if (DateTime.TryParse(flight.Departure?.Time, out departureDateTime))
-            {
-                DepartureTimeLabel.Text = departureDateTime.ToString("HH:mm", CultureInfo.InvariantCulture);
-                DepartureDateLabel.Text = departureDateTime.ToString("yyyy-MM-dd"); // Only show date
-            }
-            else
-            {
-                DepartureTimeLabel.Text = "N/A";
-                DepartureDateLabel.Text = "N/A";
-            }
-
-            // Extract arrival time
-            if (DateTime.TryParse(flight.Arrival?.Time, out arrivalDateTime))
-            {
-                ArrivalTimeLabel.Text = arrivalDateTime.ToString("HH:mm", CultureInfo.InvariantCulture);
-                ArrivalDateLabel.Text = arrivalDateTime.ToString("yyyy-MM-dd"); // Only show date
-            }
-            else
-            {
-                ArrivalTimeLabel.Text = "N/A";
-                ArrivalDateLabel.Text = "N/A";
-            }
-        }
-        
-        //calculating flight duration. api returns duration as minutes
-        //ex: duration 220 is 3 hours and 40 minutes.
-        private void calcDuration(FlightDetails flight)
-        {
-            if (flight.Duration > 0)
-            {
-                int hours = (flight.Duration) / 60;
-                int minutes = flight.Duration % 60;
-                DurationLabel.Text = $"Duration: {hours}h {minutes}m";
-            }
-            else
-            {
-                DurationLabel.Text = "Duration: N/A";
-            }
-        }
-
-        private string ExtractAirportCode(string airportString)
-        {
-            if (string.IsNullOrEmpty(airportString)) return null;
-
-            // The airport code is always at the end after " - "
-            var parts = airportString.Split(" - ");
-            return parts.Length > 1 ? parts[^1] : airportString;
+            AirportListDest.IsVisible = true;
+            AirportListOrigin.IsVisible = false;
         }
 
         private void OnAirportSearchTextChanged(object sender, TextChangedEventArgs e)
         {
-            var searchText = ((Entry)sender).Text.ToLower();
-            ListView listView;
+            var searchText = ((Entry)sender).Text?.ToLower();
+            IEnumerable<AirportItem> filtered = string.IsNullOrWhiteSpace(searchText)
+       ? _viewModel.AirportItems
+       : _viewModel.AirportItems
+           .Where(item => item.CityName.ToLower().Contains(searchText) ||
+                          item.FullString.ToLower().Contains(searchText));
 
-            if (sender == OriginEntry)
+            if (((Entry)sender).Placeholder?.ToLower().Contains("origin") == true)
             {
-                listView = AirportListOrigin;
+                AirportListOrigin.ItemsSource = filtered;
+                AirportListOrigin.IsVisible = filtered.Any();
             }
             else
             {
-                listView = AirportListDest;
-            }
-
-            if (!string.IsNullOrEmpty(searchText))
-            {
-                // Filter the airportItems list, not airportOptions
-                listView.ItemsSource = airportItems.Where(item => item.CityName.ToLower().Contains(searchText) || item.FullString.ToLower().Contains(searchText)).ToList();
-                listView.IsVisible = true;
-            }
-            else
-            {
-                listView.ItemsSource = airportItems; // Reset to the full list when search is cleared
-                listView.IsVisible = false;
+                AirportListDest.ItemsSource = filtered;
+                AirportListDest.IsVisible = filtered.Any();
             }
         }
 
         private void OnAirportSelected(object sender, SelectedItemChangedEventArgs e)
         {
-            if (e.SelectedItem == null) return;
+            if (e.SelectedItem is not AirportItem selectedAirport)
+                return;
 
-            var selectedAirport = (AirportItem)e.SelectedItem;
-
-            // Update the corresponding Entry field with the selected airport
             if (sender == AirportListOrigin)
             {
-                OriginEntry.Text = selectedAirport.FullString;
-                AirportListOrigin.IsVisible = false; // Hide the list
-                OriginEntry.Unfocus();
+                _viewModel.Origin = selectedAirport.FullString;
+                AirportListOrigin.IsVisible = false;
             }
             else if (sender == AirportListDest)
             {
-                DestinationEntry.Text = selectedAirport.FullString;
+                _viewModel.Destination = selectedAirport.FullString;
                 AirportListDest.IsVisible = false;
-                DestinationEntry.Unfocus();
             }
 
-        // Close the list view
-            ((ListView)sender).IsVisible = false;
-
+            ((ListView)sender).SelectedItem = null;
         }
 
-        private void OnOriginFocused(object sender, FocusEventArgs e)
+        private async void OnFlightTapped(object sender, EventArgs e)
         {
-            AirportListOrigin.IsVisible = true;  // Show the origin airport list
-            AirportListDest.IsVisible = false;   // Hide the destination airport list
-        }
+            var answer = await DisplayAlert("Add Flight", "Do you want to add this flight to your trip?", "Yes", "No");
 
-        // When the Destination Entry is focused
-        private void OnDestinationFocused(object sender, FocusEventArgs e)
-        {
-            AirportListDest.IsVisible = true;    // Show the destination airport list
-            AirportListOrigin.IsVisible = false; // Hide the origin airport list
+            if (answer)
+            {
+                // Execute the AddFlightCommand in your ViewModel
+                if (BindingContext is NewFlightViewModel vm && vm.AddFlightCommand.CanExecute(null))
+                {
+                    vm.AddFlightCommand.Execute(null);
+                    AirportListOrigin.IsVisible = false;
+                    AirportListDest.IsVisible = false;
+                }
+            }
+            else
+            {
+                await DisplayAlert("Continue Searching", "Feel free to search for a different flight.", "OK");
+            }
         }
-
 
         private async void OnHelpClicked(object sender, EventArgs e)
         {
-            // Show a simple help message in an alert box
-            await DisplayAlert("Help",
-                               "enter the airport IATA code (e.g., DXB) or the city name (e.g., Dubai) to search for the airport.",
-                               "OK");
+            await DisplayAlert("Help", "Enter the city name or IATA code (e.g., 'Dubai' or 'DXB')", "OK");
         }
-
-        private async void OnSkipClicked(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new NewHotelPage(userId));
-        }
-
     }
 }

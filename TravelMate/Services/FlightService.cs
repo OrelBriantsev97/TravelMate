@@ -10,7 +10,7 @@ namespace TravelMate.Services
     /// The FlightService class provides functionality for retrieving flight details from the Google Flights API using SERP API
     public static class FlightService
     {
-        private const string ApiKey = "90a7e3bc24bfeb081ad2f4bab00f252e396a3b555b066ad6b71b4809d1d23a60"; 
+        private const string ApiKey = "90a7e3bc24bfeb081ad2f4bab00f252e396a3b555b066ad6b71b4809d1d23a60";
         private const string ApiUrl = "https://serpapi.com/search?engine=google_flights";
 
         /// Retrieves flight details based on the specified flight number, origin, destination, and departure time.
@@ -19,7 +19,7 @@ namespace TravelMate.Services
         /// <param name="destination">The airport code of the destination airport.</param>
         /// <param name="departureTime">The scheduled departure time of the flight.</param>
         /// <returns>A Task representing the asynchronous operation, with a <see cref="FlightDetails"/> object containing the flight details if found, or null if no matching flight is found.</returns>
-        public static async Task<FlightDetails> GetFlightDetailsAsync(string flightNumber,string origin , string destination ,DateTime departureTime)
+        public static async Task<FlightDetails> GetFlightDetailsAsync(string flightNumber, string origin, string destination, DateTime departureTime)
         {
             var client = new HttpClient();
             string departureDate = departureTime.ToString("yyyy-MM-dd");

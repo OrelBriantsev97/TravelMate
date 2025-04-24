@@ -20,5 +20,15 @@ namespace TravelMate.Models
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         public string Amenities { get; set; }
+        public string DisplayAddress =>
+        string.IsNullOrWhiteSpace(Address) || Address == "N/A"
+        ? $"Nearby Places: {NearbyPlaces}"
+        : Address;
+
+        public string DisplayPhone =>
+            string.IsNullOrWhiteSpace(Phone) || Phone == "N/A"
+            ? $"Amenities: {Amenities}"
+            : Phone;
+
     }
 }

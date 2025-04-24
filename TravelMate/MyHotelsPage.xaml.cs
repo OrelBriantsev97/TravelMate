@@ -34,12 +34,6 @@ namespace TravelMate
                     await DisplayAlert("No Hotels", "No future hotels found.", "OK");
                     return;
                 }
-                foreach (var hotel in hotels)
-                {
-                    hotel.LogoUrl = hotel.LogoUrl?.Replace("Uri: ", "").Trim();
-                    Console.WriteLine($"Hotel: {hotel.HotelName}, Cleaned Logo URL: {hotel.LogoUrl}");
-                }
-                // Sort by check-in date
                 var sortedHotels = hotels.OrderBy(h => DateTime.Parse(h.CheckInDate)).ToList();
                 HotelsCollectionView.ItemsSource = sortedHotels;
             }

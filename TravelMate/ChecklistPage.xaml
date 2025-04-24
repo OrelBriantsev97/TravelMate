@@ -1,79 +1,98 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:controls="clr-namespace:TravelMate.Controls"         
+             xmlns:controls="clr-namespace:TravelMate.Controls"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="TravelMate.ChecklistPage"
              NavigationPage.HasNavigationBar="False"
              BackgroundColor="#C1ECF5">
 
+  
     <StackLayout Padding="10">
 
         <!-- ✅ Page Title -->
-        <Label x:Name="checklistLabel" Text="Travel Checklist" FontSize="36"  FontFamily="Chi"
-               FontAttributes="Bold" TextColor="#32545c" HorizontalOptions="Center" Margin="0,70,0,0"/>
+        <Label x:Name="checklistLabel"
+               Text="{Binding Destination, StringFormat='Checklist for {0}'}"
+               FontSize="36"
+               FontFamily="Chi"
+               FontAttributes="Bold"
+               TextColor="#32545c"
+               HorizontalOptions="Center"
+               Margin="0,70,0,0" />
 
-        <ListView x:Name="ChecklistView"
-          ItemsSource="{Binding groupedChecklistItems}"
-          IsGroupingEnabled="True"
-          HasUnevenRows="True"
-          BackgroundColor="#C1ECF5"
-          SeparatorVisibility="None">
+        <!-- ✅ Checklist ListView -->
+        <ListView ItemsSource="{Binding GroupedChecklistItems}"
+                  IsGroupingEnabled="True"
+                  HasUnevenRows="True"
+                  BackgroundColor="#C1ECF5"
+                  SeparatorVisibility="None"
+                  x:Name="ChecklistView">
 
-            <!-- ✅ Expandable Category Headers -->
+            <!-- ✅ Group Headers -->
             <ListView.GroupHeaderTemplate>
                 <DataTemplate>
                     <ViewCell>
                         <StackLayout Orientation="Horizontal" Padding="10">
-                            <Label Text="{Binding Key}" FontFamily="PlayWrite" FontSize="20" FontAttributes="Bold" 
-                           TextColor="#32545c" />
-                            <Image Source="{Binding IsExpanded, Converter={StaticResource ExpandCollapseIconConverter}}"
-                           HeightRequest="20" WidthRequest="20">
-                                <Image.GestureRecognizers>
-                                    <TapGestureRecognizer Tapped="ToggleCategoryExpand" CommandParameter="{Binding .}"/>
-                                </Image.GestureRecognizers>
-                            </Image>
+                            <Label Text="{Binding Key}"
+                                   FontFamily="PlayWrite"
+                                   FontSize="20"
+                                   FontAttributes="Bold"
+                                   TextColor="#32545c" />
+                            <Label Text="{Binding Icon}" FontSize="20"
+                            TextColor="#32545c"
+                              Margin="5,0,0,0"/>
                         </StackLayout>
                     </ViewCell>
                 </DataTemplate>
             </ListView.GroupHeaderTemplate>
 
-            <!-- ✅ Swipe-to-delete Checklist Items -->
+        <!-- ✅ Checklist Items with Swipe to Delete -->
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
                         <SwipeView>
                             <SwipeView.RightItems>
                                 <SwipeItems Mode="Execute">
-                                    <SwipeItem Text="Delete" BackgroundColor="Red"
-                                       Invoked="OnDeleteItem" CommandParameter="{Binding .}"/>
+                                    <SwipeItem Text="Delete"
+                                            BackgroundColor="Red"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteItemCommand}"
+                                            CommandParameter="{Binding .}" />
                                 </SwipeItems>
                             </SwipeView.RightItems>
 
                             <Grid Padding="10">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="40" />
+                                    <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
-                                <!-- ✅ Checkbox -->
-                                <CheckBox IsChecked="{Binding IsChecked}" Color="#32545c" 
-                                  CheckedChanged="OnItemCheckedChanged" Grid.Column="0"/>
+                                <CheckBox IsChecked="{Binding IsChecked}"
+                                          Color="#32545c"
+                                          Grid.Column="0"
+                                          CheckedChanged="CheckBox_CheckedChanged" />
+
+
 
                                 <!-- ✅ Checklist Item Text -->
-                                <Label Text="{Binding Item}" FontSize="18" Margin="0,8,0,0"
-                               TextColor="Black" Grid.Column="1"/>
+                                <Label Text="{Binding Item}" 
+                                       FontSize="18"
+                                       TextColor="Black" Grid.Column="1" 
+                                       Margin="0,10,0,0"/>
+
                             </Grid>
                         </SwipeView>
                     </ViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
-
         </ListView>
+
+        <!-- ✅ Add Item Button -->
         <StackLayout Orientation="Horizontal" Padding="10">
-            <Entry x:Name="NewItemEntry" Placeholder="Add new item..." FontSize="18" WidthRequest="250" />
-            <Button Text="+" Clicked="OnAddItemClicked" BackgroundColor="#32545c" Margin="10,0,0,0"/>
+            <Entry x:Name="NewItemEntry" Placeholder="Add new item..." FontSize="18" WidthRequest="250" IsVisible="False"/>
+            <Button Text="+" Command="{Binding AddItemCommand}" BackgroundColor="#32545c" Margin="10,0,0,0"/>
         </StackLayout>
 
+        <!-- ✅ Bottom Navigation -->
         <Grid Grid.Row="2">
             <ContentView x:Name="NavigationContainer"/>
         </Grid>

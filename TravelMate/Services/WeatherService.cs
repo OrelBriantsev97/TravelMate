@@ -5,12 +5,18 @@ using System.Threading.Tasks;
 
 namespace TravelMate.Services
 {
+    // Provides functionality to retrieve current weather information for a specified location
+    // using the Visual Crossing Weather API.
     public static class WeatherService
     {
         private static readonly HttpClient _httpClient = new HttpClient();
         private const string ApiKey = "R9E3B83PHVA6XFK8XDH8STPLF";
         private const string BaseUrl = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline";
 
+        // Retrieves the current day's temperature and resolved address for a given location.
+        /// <param name="location">The location query (e.g., "Tel Aviv,Israel").</param>
+        /// <returns> A tuple of (<c>double?</c> temperature in Celsius rounded to one decimal place,
+        /// <c>string</c> resolved address). If the API call fails or data is unavailable, returns (null, "Location Unknown").
         public static async Task<(double? temperature, string address)> GetWeather(string location)
         {
             string url = $"{BaseUrl}/{location}/?key={ApiKey}";
@@ -37,7 +43,7 @@ namespace TravelMate.Services
             return (Math.Round(temperatureC, 1), weatherData.Address);
         }
     }
-
+    // Represents the JSON response from the Visual Crossing Weather API.
     public class WeatherResponse
     {
         [JsonProperty("address")]

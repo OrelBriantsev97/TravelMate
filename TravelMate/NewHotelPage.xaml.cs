@@ -1,124 +1,63 @@
-﻿using System.Collections.ObjectModel;
-using System;
-using System.Diagnostics;
+﻿using System;
 using Microsoft.Maui.Controls;
-using TravelMate.Models;
-using TravelMate.Services;
+using TravelMate.ViewModels;
+using System.Windows.Input;
 
 namespace TravelMate
 {
     public partial class NewHotelPage : ContentPage
     {
-        public int userId { get; set; }
-        public ObservableCollection<Hotel> HotelResults { get; set; } = new ObservableCollection<Hotel>();
-
-        public NewHotelPage(int userID)
+        private readonly NewHotelViewModel _viewModel;
+        public NewHotelPage(int userId)
         {
 
             InitializeComponent();
-            userId = userID;
-            this.BindingContext = this;
-        }
+            NavigationPage.SetHasNavigationBar(this, false);
+            _viewModel = new NewHotelViewModel(userId, Navigation);
+            BindingContext = _viewModel;
 
-
-        private async void OnSearchHotelClicked(object sender, EventArgs e)
-        {
-            var hotelName = HotelNameEntry.Text;
-            var city = CityEntry.Text;
-            var checkInDate = CheckInDatePicker.Date;
-            var checkOutDate = CheckOutDatePicker.Date;
-            Console.WriteLine($"userid is  in hotel1 {userId}");
-            if (string.IsNullOrEmpty(hotelName) || string.IsNullOrEmpty(city))
+            _viewModel.PropertyChanged += (s, e) =>
             {
-                await DisplayAlert("Error", "Please enter both hotel name and city.", "OK");
-                return;
-            }
-            var checkIn = CheckInDatePicker.Date.ToString("yyyy-MM-dd");
-            var checkOut = CheckOutDatePicker.Date.ToString("yyyy-MM-dd");
-            string hotelSearch = $"{hotelName} {city}";
-            var hotelDetailsList = await HotelService.GetHotelDetailsAsync(hotelSearch, checkIn, checkOut);
-            if (hotelDetailsList != null && hotelDetailsList.Count > 0)
-            {
-                var hotel = hotelDetailsList[0];
-
-                HotelResultStack.IsVisible = true;
-                NameLabel.Text = hotel.HotelName;
-                AddressLabel.Text = !string.IsNullOrEmpty(hotel.Address) ? hotel.Address : "Nearby Places:";
-                NearbyPlacesLabel.IsVisible = string.IsNullOrEmpty(hotel.Address);
-                NearbyPlacesLabel.Text = hotel.NearbyPlaces;
-                HotelClassLabel.Text = hotel.HotelClass.ToString();
-                PhoneLabel.Text = !string.IsNullOrEmpty(hotel.Phone) ? $"Phone: {hotel.Phone}" : "Amenities:";
-                HotelAmenitiesLabel.IsVisible = string.IsNullOrEmpty(hotel.Phone);
-                HotelAmenitiesLabel.Text = string.Join(", ", hotel.Amenities.Take(3));
-                LatitudeLabel.Text = hotel.Latitude.ToString();
-                LongitudeLabel.Text = hotel.Longitude.ToString();
-                Star1.IsVisible = hotel.HotelClass >= 1;
-                Star2.IsVisible = hotel.HotelClass >= 2;
-                Star3.IsVisible = hotel.HotelClass >= 3;
-                Star4.IsVisible = hotel.HotelClass >= 4;
-                Star5.IsVisible = hotel.HotelClass >= 5;
-
-
-                if (!string.IsNullOrEmpty(hotel.LogoUrl))
+                if (e.PropertyName == nameof(_viewModel.SelectedHotel) && _viewModel.SelectedHotel != null)
                 {
-                    HotelImage.Source = hotel.LogoUrl;
+                    ShowStars(_viewModel.SelectedHotel.HotelClass);
                 }
-
-            }
-            else
-            {
-                await DisplayAlert("No Results", "No hotels found matching your criteria.", "OK");
-            }
-
+            };
         }
+
 
         private async void OnHotelTapped(object sender, EventArgs e)
         {
             var answer = await DisplayAlert("Add Hotel", "Do you want to add this Hotel to your trip?", "Yes", "No");
-            Console.WriteLine($"userid is  in hotel6 {userId}");
+
             if (answer)
             {
-                var hotel = new Hotel
-                {
-                    UserId = userId,
-                    HotelName = NameLabel.Text,
-                    Address = AddressLabel.Text,
-                    Phone = PhoneLabel.Text.Replace("Phone: ", ""),
-                    CheckInDate = CheckInDatePicker.Date.ToString("yyyy-MM-dd"),
-                    CheckOutDate = CheckOutDatePicker.Date.ToString("yyyy-MM-dd"),
-                    LogoUrl = HotelImage.Source.ToString(),
-                    Class = int.TryParse(HotelClassLabel.Text, out var hotelClass) ? hotelClass : 1,
-                    NearbyPlaces = NearbyPlacesLabel.Text.Replace("Nearby: ", ""),
-                    Latitude = double.TryParse(LatitudeLabel.Text, out var lat) ? lat : 0.0,
-                    Longitude = double.TryParse(LongitudeLabel.Text, out var lon) ? lon : 0.0,
-                    Amenities = HotelAmenitiesLabel.Text,
-
-                };
-                DatabaseHelper.AddHotel(hotel, userId);
-                
-                await DisplayAlert("Success", "Hotel added to your trip!", "OK");
-                bool addAnotherHotel = await DisplayAlert("Add Another Hotel?", "Do you want to add another Hotel?", "Yes", "No");
-                if(addAnotherHotel)
-                {
-                    HotelNameEntry.Text = string.Empty;
-                    CityEntry.Text = string.Empty;
-                    CheckInDatePicker.Date = DateTime.Now;
-                    CheckOutDatePicker.Date = DateTime.Now;
-                }
-                else
-                {
-                    var homePage = new HomePage(userId);
-                    await Navigation.PushAsync(new NavigationPage(homePage));
-                }
+                await _viewModel.AddHotelCommand.ExecuteAsync(null);
             }
-
         }
 
-        private async void OnSkipClicked(object sender, EventArgs e)
+        private void ShowStars(int hotelClass)
         {
-            var homePage = new HomePage(userId);
-            await Navigation.PushAsync(new NavigationPage(homePage));
+            Star1.IsVisible = hotelClass >= 1;
+            Star2.IsVisible = hotelClass >= 2;
+            Star3.IsVisible = hotelClass >= 3;
+            Star4.IsVisible = hotelClass >= 4;
+            Star5.IsVisible = hotelClass >= 5;
         }
+    }
+
+    public static class CommandExtensions
+    {
+        public static async Task ExecuteAsync(this ICommand command, object parameter)
+        {
+            if (command is Command cmd && cmd.CanExecute(parameter))
+                cmd.Execute(parameter);
+
+            await Task.CompletedTask;
+        }
+
+       
+
     }
 }
 

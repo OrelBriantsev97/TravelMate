@@ -1,34 +1,51 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:mapsui="clr-namespace:Mapsui.UI.Maui;assembly=Mapsui.UI.Maui"
              xmlns:controls="clr-namespace:TravelMate.Controls"
+             x:Class="TravelMate.MapPage"
              NavigationPage.HasNavigationBar="False"
-             BackgroundColor="#C1ECF5"
-             x:Class="TravelMate.MapPage">
+             BackgroundColor="#C1ECF5">
 
     <Grid RowDefinitions="Auto, Auto, *, Auto">
-        <!-- Map Section -->
+
+        <!-- Map -->
         <Frame HeightRequest="250" Padding="10" CornerRadius="10" BackgroundColor="White">
             <Grid>
-                <!-- Map -->
                 <mapsui:MapControl x:Name="mapView" />
 
-                <StackLayout Orientation="Vertical" VerticalOptions="End"
-                     HorizontalOptions="End"   Padding="10"
-                     BackgroundColor="Transparent"  Margin="5">
+                <!-- Zoom buttons -->
+                <StackLayout Orientation="Vertical"
+                             VerticalOptions="End"
+                             HorizontalOptions="End"
+                             Padding="10"
+                             BackgroundColor="Transparent"
+                             Margin="5">
                     <Button Text="🔍 +" Clicked="ZoomIn" Background="Transparent" TextColor="Black" FontSize="20"/>
                     <Button Text="🔍 -" Clicked="ZoomOut" Background="Transparent" TextColor="Black" FontSize="20"/>
                 </StackLayout>
+
+                <!-- 🌀 Loading Spinner -->
+                <ActivityIndicator IsRunning="True"
+                                   IsVisible="{Binding IsLoading}"
+                                   Color="#32545c"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"
+                                   WidthRequest="50"
+                                   HeightRequest="50"/>
             </Grid>
         </Frame>
 
         <!-- Title -->
-        <Label Grid.Row="1" Text="Your Trip Overview:" FontFamily="Chi" FontSize="22" TextColor="#32545c" HorizontalOptions="Center" FontAttributes="Bold"/>
+        <Label Grid.Row="1" Text="Your Trip Overview:"
+               FontFamily="Chi" FontSize="22"
+               TextColor="#32545c"
+               HorizontalOptions="Center"
+               FontAttributes="Bold"/>
 
+        <!-- Trip Overview List -->
         <ScrollView Grid.Row="2" Padding="10" BackgroundColor="#C1ECF5">
-            <Frame  Padding="5" Grid.Row="2" BackgroundColor="#C1ECF5" >
-                <CollectionView x:Name="tripOverviewCollectionView" Background="#C1ECF5">
+            <Frame Padding="5" BackgroundColor="#C1ECF5">
+                <CollectionView ItemsSource="{Binding TripEvents}" BackgroundColor="#C1ECF5">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <Grid Padding="10">
@@ -40,14 +57,13 @@
                                 <StackLayout Grid.Row="0" Orientation="Horizontal">
                                     <Label Text="{Binding Icon}" FontSize="22"/>
                                     <Label Text="{Binding Title}" FontSize="20"
-                                   FontAttributes="Bold" TextColor="#32545c"
-                                   FontFamily="Chi" Margin="5,0,0,0"/>
+                                           FontAttributes="Bold" TextColor="#32545c"
+                                           FontFamily="Chi" Margin="5,0,0,0"/>
                                 </StackLayout>
 
                                 <Label Grid.Row="1" Text="{Binding Subtitle}"
-                               FontSize="20" TextColor="Black" 
-                               FontFamily="Chi" Margin="25,0,0,0"/>
-                           
+                                       FontSize="20" TextColor="Black" 
+                                       FontFamily="Chi" Margin="25,0,0,0"/>
                             </Grid>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
@@ -55,6 +71,7 @@
             </Frame>
         </ScrollView>
 
+        <!-- Bottom Nav -->
         <Grid Grid.Row="3">
             <ContentView x:Name="NavigationContainer"/>
         </Grid>

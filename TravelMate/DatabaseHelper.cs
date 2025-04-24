@@ -19,6 +19,7 @@ namespace TravelMate
 
                 try
                 {
+           
                     _database.CreateTable<User>();
                     _database.CreateTable<Flight>();
                     _database.CreateTable<Hotel>();
@@ -219,6 +220,22 @@ namespace TravelMate
 
             return false; // Return false if user was not found
         }
+
+        public static async Task<bool> ChangePassword(int userId, string newPassword)
+        {
+            var db = await GetDatabase();
+            var user = db.Table<User>().FirstOrDefault(u => u.Id == userId);
+
+            if (user != null)
+            {
+                user.Password = newPassword;
+                db.Update(user); // Update the user's password
+                return true; // Return true if the password was updated
+            }
+
+            return false; // Return false if user not found
+        }
+
 
 
     }

@@ -1,117 +1,147 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:TravelMate.ViewModels"
              x:Class="TravelMate.LoginPage"
              NavigationPage.HasNavigationBar="False"
              BackgroundColor="#C1ECF5">
 
-    <Grid RowDefinitions="Auto, *" Padding="10">
+    <ContentPage.BindingContext>
+        <viewModels:LoginViewModel />
+    </ContentPage.BindingContext>
 
-        <!-- Welcome Header and Subheader -->
-        <Frame Grid.Row="0" CornerRadius="0" HasShadow="False" BackgroundColor="#C1ECF5" BorderColor="Transparent">
-            <StackLayout Orientation="Vertical" Spacing="10" HorizontalOptions="Center">
-                <Image Source="mainlogo.png" WidthRequest="300" HeightRequest="300" VerticalOptions="Center" BackgroundColor="Transparent" Margin="0,-50,0,-60"/>
-                <Label Text="Welcome, Travelers! 🌍" FontSize="30" TextColor="#32545c" FontAttributes="Bold"
-                       FontFamily="OpenSansRegular" HorizontalOptions="Center" VerticalOptions="Center"/>
-                <Label Text="Let’s get your journey started" FontSize="22" TextColor="#3b6069" 
-                       FontFamily="OpenSansRegular" VerticalOptions="StartAndExpand" Padding="10" Margin="0,-20,0,60"/>
+    <Grid RowDefinitions="Auto, *" Padding="10">
+        <!-- Header -->
+        <Frame Grid.Row="0" BackgroundColor="#C1ECF5" HasShadow="False" BorderColor="Transparent">
+            <StackLayout HorizontalOptions="Center" Spacing="10">
+                <Image Source="mainlogo.png" WidthRequest="300" HeightRequest="300" Margin="0,-50,0,-60" />
+                <Label Text="Welcome, Travelers! 🌍" FontSize="30" TextColor="#32545c" FontAttributes="Bold" FontFamily="OpenSansRegular" HorizontalOptions="Center" />
+                <Label Text="Let’s get your journey started" FontSize="22" TextColor="#3b6069" FontFamily="OpenSansRegular" Margin="0,-10,0,60" />
             </StackLayout>
         </Frame>
 
         <!-- Login Form -->
-        <StackLayout x:Name="LoginForm" Grid.Row="1" Spacing="15" VerticalOptions="Start">
-            <Frame BackgroundColor="White" CornerRadius="10" Padding="5" HasShadow="True">
+        <StackLayout Grid.Row="1" Spacing="15" VerticalOptions="Start" IsVisible="{Binding IsLoginVisible}">
+            <Frame BackgroundColor="White" CornerRadius="10" Padding="5" HasShadow="True" Margin="3,-2,3,-2">
                 <StackLayout Orientation="Horizontal" Spacing="5">
-                    <Image Source="email_icon.png" WidthRequest="25" HeightRequest="25" VerticalOptions="Center"/>
-                    <Entry x:Name="EmailEntry" Placeholder="Enter your email" Keyboard="Email" 
-                           TextColor="#333333" FontFamily="OpenSansRegular" FontSize="20" PlaceholderColor="#888888"/>
+                    <Image Source="email_icon.png" WidthRequest="25" HeightRequest="25" VerticalOptions="Center" />
+                    <Entry Text="{Binding Email}" Placeholder="Enter your email" FontSize="20" FontFamily="OpenSansRegular" />
                 </StackLayout>
             </Frame>
 
-            <Frame BackgroundColor="White" CornerRadius="10" Padding="5" HasShadow="True">
+            <Frame BackgroundColor="White" CornerRadius="10" Padding="5" HasShadow="True" Margin="3,0,3,0">
                 <StackLayout Orientation="Horizontal" Spacing="5">
-                    <Image Source="password_icon.png" WidthRequest="25" HeightRequest="25" VerticalOptions="Center"/>
-                    <Entry x:Name="PasswordEntry" Placeholder="Enter your password" IsPassword="True" 
-                           TextColor="#333333" FontFamily="OpenSansRegular" FontSize="20" PlaceholderColor="#888888"/>
+                    <Image Source="password_icon.png" WidthRequest="25" HeightRequest="25" VerticalOptions="Center" />
+                    <Entry Text="{Binding Password}" Placeholder="Enter your password" IsPassword="True" FontSize="20" FontFamily="OpenSansRegular" />
                 </StackLayout>
             </Frame>
 
-            <Label x:Name="ErrorMessage" TextColor="Red" FontSize="14" IsVisible="False" FontFamily="OpenSansRegular" HorizontalOptions="Center"/>
+            <Button Text="Login" Command="{Binding LoginCommand}" BackgroundColor="#7ea3ab" TextColor="White" FontSize="16" HeightRequest="50" />
 
-            <Button Text="Login" Clicked="OnLoginClicked" BackgroundColor="#7ea3ab" TextColor="White" FontSize="16" 
-                    FontFamily="OpenSansRegular" CornerRadius="10" HeightRequest="50"/>
-
-            <Label Text="Don't have an account? Sign up here" TextColor="Black" FontSize="18" FontFamily="OpenSansRegular" HorizontalOptions="Center" FontAttributes="Bold">
+            <Label Text="Don't have an account? Sign up here" FontAttributes="Bold" HorizontalOptions="Center" FontSize="18">
                 <Label.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="OnSignUpTapped"/>
+                    <TapGestureRecognizer Command="{Binding ToggleLoginSignupCommand}" />
                 </Label.GestureRecognizers>
             </Label>
 
-            <Label Text="Forgot password?" TextColor="Black" FontSize="18" FontFamily="OpenSansRegular" HorizontalOptions="Center" FontAttributes="Bold">
+            <Label Text="Forgot your password?" FontAttributes="Bold" HorizontalOptions="Center" FontSize="18">
                 <Label.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="OnForgotPasswordTapped"/>
+                    <TapGestureRecognizer Command="{Binding ShowForgotPasswordCommand}" />
+                </Label.GestureRecognizers>
+            </Label>
+
+        </StackLayout>
+
+        <!-- Forgot Password Form -->
+        <StackLayout Grid.Row="1" Spacing="15" VerticalOptions="Start" IsVisible="{Binding IsForgotPasswordVisible}">
+            <Label Text="Reset Your Password" FontSize="24" TextColor="#3b6069" HorizontalOptions="Center" />
+
+            <Frame BackgroundColor="White" CornerRadius="10" Padding="5">
+                <StackLayout Orientation="Horizontal" Spacing="5">
+                    <Image Source="email_icon.png" WidthRequest="25" HeightRequest="25" VerticalOptions="Center" />
+                    <Entry Text="{Binding Email}" Placeholder="Enter your Email" FontSize="18" />
+                </StackLayout>
+            </Frame>
+
+            <Frame BackgroundColor="White" CornerRadius="10" Padding="5">
+                <StackLayout Orientation="Horizontal" Spacing="5">
+                    <Image Source="password_icon.png" WidthRequest="25" HeightRequest="25" VerticalOptions="Center" />
+                    <Entry Text="{Binding NewPassword}" Placeholder="New Password" IsPassword="True" FontSize="18" />
+                </StackLayout>
+            </Frame>
+
+            <Frame BackgroundColor="White" CornerRadius="10" Padding="5">
+                <StackLayout Orientation="Horizontal" Spacing="5">
+                    <Image Source="password_icon.png" WidthRequest="25" HeightRequest="25" VerticalOptions="Center" />
+                    <Entry Text="{Binding ConfirmNewPassword}" Placeholder="Confirm Password" IsPassword="True" FontSize="18" />
+                </StackLayout>
+            </Frame>
+
+            <Button Text="Reset Password"
+            Command="{Binding ResetPasswordCommand}"
+            BackgroundColor="#7ea3ab"
+            TextColor="White"
+            FontSize="16"
+            HeightRequest="50" />
+
+            <Label Text="Back to login" FontAttributes="Bold" HorizontalOptions="Center">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ToggleLoginSignupCommand}" />
                 </Label.GestureRecognizers>
             </Label>
         </StackLayout>
+
 
         <!-- Sign-Up Form -->
-        <StackLayout x:Name="SignUpForm" Grid.Row="1" Spacing="10" VerticalOptions="Start" IsVisible="False" Margin="0,-50,0,0">
-            <Frame BackgroundColor="White" CornerRadius="10" Padding="5" HasShadow="True">
+        <StackLayout Grid.Row="1" Spacing="10" VerticalOptions="Start" IsVisible="{Binding IsSignupVisible}">
+            <Frame BackgroundColor="White" CornerRadius="10" Padding="5">
                 <StackLayout Orientation="Horizontal" Spacing="5">
-                    <Image Source="user_icon.png" WidthRequest="25" HeightRequest="25" VerticalOptions="Center"/>
-                    <Entry x:Name="UsernameEntry" Placeholder="Enter your User Name" FontSize="18" TextColor="#333333"
-                           PlaceholderColor="#888888" FontFamily="OpenSansRegular"/>
+                    <Image Source="user_icon.png" WidthRequest="25" HeightRequest="25" VerticalOptions="Center" />
+                    <Entry Text="{Binding Username}" Placeholder="Enter your User Name" FontSize="20" Margin="3,0,3,0"/>
                 </StackLayout>
             </Frame>
 
-            <Frame BackgroundColor="White" CornerRadius="10" Padding="5" HasShadow="True">
+            <Frame BackgroundColor="White" CornerRadius="10" Padding="5">
                 <StackLayout Orientation="Horizontal" Spacing="5">
-                    <Image Source="email_icon.png" WidthRequest="25" HeightRequest="25" VerticalOptions="Center"/>
-                    <Entry x:Name="SignUpEmailEntry" Placeholder="Enter your Email" Keyboard="Email"  
-                           TextColor="#333333" FontFamily="OpenSansRegular" FontSize="18" PlaceholderColor="#888888"/>
+                    <Image Source="email_icon.png" WidthRequest="25" HeightRequest="25" VerticalOptions="Center" />
+                    <Entry Text="{Binding Email}" Placeholder="Enter your Email" FontSize="20" Margin="3,0,3,0" />
                 </StackLayout>
             </Frame>
 
-            <Frame BackgroundColor="White" CornerRadius="10" Padding="5" HasShadow="True">
+            <Frame BackgroundColor="White" CornerRadius="10" Padding="5">
                 <StackLayout Orientation="Horizontal" Spacing="5">
-                    <Image Source="password_icon.png" WidthRequest="25" HeightRequest="25" VerticalOptions="Center"/>
-                    <Entry x:Name="SignUpPasswordEntry" Placeholder="Enter your Password" IsPassword="True" 
-                           TextColor="#333333" PlaceholderColor="#888888" FontFamily="OpenSansRegular" FontSize="18"/>
+                    <Image Source="password_icon.png" WidthRequest="25" HeightRequest="25" VerticalOptions="Center" />
+                    <Entry Text="{Binding Password}" Placeholder="Enter your Password" IsPassword="True" FontSize="20" Margin="3,0,3,0" />
                 </StackLayout>
             </Frame>
 
-            <Frame BackgroundColor="White" CornerRadius="10" Padding="5" HasShadow="True">
+            <Frame BackgroundColor="White" CornerRadius="10" Padding="5">
                 <StackLayout Orientation="Horizontal" Spacing="5">
-                    <Image Source="password_icon.png" WidthRequest="25" HeightRequest="25" VerticalOptions="Center"/>
-                    <Entry x:Name="ConfirmPasswordEntry" Placeholder="Confirm your Password" IsPassword="True" 
-                           TextColor="#333333" PlaceholderColor="#888888" FontFamily="OpenSansRegular" FontSize="18"/>
+                    <Image Source="password_icon.png" WidthRequest="25" HeightRequest="25" VerticalOptions="Center" />
+                    <Entry Text="{Binding ConfirmPassword}" Placeholder="Confirm your Password" IsPassword="True" FontSize="20" Margin="3,0,3,0" />
                 </StackLayout>
             </Frame>
 
-            <Button Text="Sign Up" Clicked="OnSignUpClicked" BackgroundColor="#7ea3ab" TextColor="Black" 
-                    CornerRadius="10" FontFamily="OpenSansRegular" HeightRequest="50" FontSize="16"/>
+            <Button Text="Sign Up" Command="{Binding SignupCommand}" BackgroundColor="#7ea3ab" TextColor="White" FontSize="16" HeightRequest="50" />
 
-            <Label Text="Already a traveler? Log in here!" TextColor="Black" FontSize="18" FontFamily="OpenSansRegular" HorizontalOptions="Center" FontAttributes="Bold">
+            <Label Text="Already a traveler? Log in here!" HorizontalOptions="Center" FontSize="18" FontAttributes="Bold">
                 <Label.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="OnLoginTapped"/>
+                    <TapGestureRecognizer Command="{Binding ToggleLoginSignupCommand}" />
                 </Label.GestureRecognizers>
             </Label>
         </StackLayout>
+        
+        
 
         <!-- PIN Input Form -->
-        <StackLayout x:Name="PinInputForm" Grid.Row="1" Spacing="15" VerticalOptions="Start" IsVisible="False">
-            <Label Text="We sent you an email with a PIN code, please insert it here" 
-           FontSize="22" TextColor="#3b6069" 
-           FontFamily="Chi" Padding="10" Margin="15,-50,0,0"/>
-            <Frame BackgroundColor="White" CornerRadius="10" Padding="5" HasShadow="True">
+        <StackLayout Grid.Row="1" Spacing="15" VerticalOptions="Start" IsVisible="{Binding IsPinSectionVisible}">
+            <Label Text="We sent you an email with a PIN code, please insert it here" FontSize="22" TextColor="#3b6069" />
+            <Frame BackgroundColor="White" CornerRadius="10" Padding="5">
                 <StackLayout Orientation="Horizontal" Spacing="5">
-                    <Image Source="pin_icon.png" WidthRequest="25" HeightRequest="25" VerticalOptions="Center"/>
-                    <Entry x:Name="PinCodeEntry" Placeholder="Enter your PIN code" Keyboard="Numeric" 
-                           TextColor="#333333" FontFamily="OpenSansRegular" FontSize="20" PlaceholderColor="#888888"/>
+                    <Image Source="pin_icon.png" WidthRequest="25" HeightRequest="25" VerticalOptions="Center" />
+                    <Entry Text="{Binding Pin}" Placeholder="Enter your PIN code" Keyboard="Numeric" FontSize="20" />
                 </StackLayout>
             </Frame>
-            <Button Text="Verify PIN" Clicked="OnPinVerifiedClicked" BackgroundColor="#7ea3ab" TextColor="White" FontSize="16" 
-                    FontFamily="OpenSansRegular" CornerRadius="10" HeightRequest="50"/>
+            <Button Text="Verify PIN" Command="{Binding VerifyPinCommand}" BackgroundColor="#7ea3ab" TextColor="White" FontSize="16" HeightRequest="50" />
         </StackLayout>
-
     </Grid>
 </ContentPage>

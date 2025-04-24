@@ -7,15 +7,13 @@
     <Grid Padding="20" RowDefinitions="Auto, *">
         <Label Text="Upcoming Flights"
                FontSize="30"
-               FontFamily ="sans-serif"
+               FontFamily="sans-serif"
                FontAttributes="Bold"
                TextColor="#32545c"
                HorizontalOptions="Center"
-               VerticalOptions="Center"
-               Margin="0,50,0,0"/>
+               Margin="0,50,0,0" />
 
-        <!-- Header with Airplane Icon and Title -->
-        <StackLayout Grid.Row="0" Orientation="Horizontal" HorizontalOptions="Center" Padding="10" Margin="0,130,0,0">
+        <StackLayout Grid.Row="0" Orientation="Horizontal" HorizontalOptions="Center" Margin="0,130,0,0">
             <Label Text="What's your next destination?"
                    FontFamily="Chi"
                    FontSize="22"
@@ -23,36 +21,25 @@
                    VerticalOptions="StartAndExpand" />
         </StackLayout>
 
-        <!-- Main Content -->
         <ScrollView Grid.Row="1">
             <StackLayout Spacing="10" VerticalOptions="StartAndExpand">
+
                 <!-- Flight Number -->
                 <Frame BackgroundColor="White" Padding="5" HasShadow="True" Margin="0,10,0,0">
                     <StackLayout Orientation="Horizontal" Spacing="10">
                         <Image Source="airplain_icon.png" WidthRequest="25" HeightRequest="25" VerticalOptions="Center" />
-                        <Entry x:Name="FlightNumberEntry"
-                               Placeholder="Enter Flight Number"
-                               Keyboard="Text"
-                               FontFamily="sans-serif"
-                               FontSize="18"
-                               TextColor="#333333"
-                               PlaceholderColor="#888888" />
+                        <Entry Text="{Binding FlightNumber}" Placeholder="Enter Flight Number"
+                               FontFamily="sans-serif" FontSize="18" TextColor="#333333" PlaceholderColor="#888888" />
                     </StackLayout>
                 </Frame>
 
+                <!-- Origin Entry -->
                 <Frame BackgroundColor="White" Padding="5" HasShadow="True">
                     <StackLayout Orientation="Horizontal" Spacing="10">
                         <Image Source="origin.png" WidthRequest="25" HeightRequest="25" VerticalOptions="Center" />
-                        <Entry x:Name="OriginEntry"
-                        Placeholder="Select Origin Airport"
-                        FontSize="18"
-                        TextColor="#333333"
-                        FontFamily="sans-serif"
-                        PlaceholderColor="#888888"
-                        Focused="OnOriginFocused"
-                        TextChanged="OnAirportSearchTextChanged"/>
-
-                        <!-- Help Icon with Tooltip -->
+                        <Entry Text="{Binding Origin}" Placeholder="Select Origin Airport"
+                               FontSize="18" TextColor="#333333" FontFamily="sans-serif"
+                               PlaceholderColor="#888888" Focused="OnOriginFocused" TextChanged="OnAirportSearchTextChanged" />
                         <StackLayout Orientation="Horizontal" HorizontalOptions="EndAndExpand" Padding="0,0,0,30">
                             <ImageButton Source="help.png"
                                          HeightRequest="15" WidthRequest="15" MinimumHeightRequest="15" MinimumWidthRequest="15"
@@ -61,35 +48,24 @@
                     </StackLayout>
                 </Frame>
 
-
-                <ListView x:Name="AirportListOrigin"
-                            IsVisible="False"
-                            ItemSelected="OnAirportSelected"
-                            BackgroundColor="White"
-                            SelectionMode="Single">
+                <ListView x:Name="AirportListOrigin" IsVisible="False" ItemSelected="OnAirportSelected"
+                          ItemsSource="{Binding AirportItems}" BackgroundColor="White" SelectionMode="Single">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                <ViewCell.View>
-                                    <Label Text="{Binding CityName}" TextColor="Black" VerticalOptions="Center" />
-                                </ViewCell.View>
+                                <Label Text="{Binding CityName}" TextColor="Black" VerticalOptions="Center" />
                             </ViewCell>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
 
+                <!-- Destination Entry -->
                 <Frame BackgroundColor="White" Padding="5" HasShadow="True">
                     <StackLayout Orientation="Horizontal" Spacing="10">
                         <Image Source="origin.png" WidthRequest="25" HeightRequest="25" VerticalOptions="Center" />
-                        <Entry x:Name="DestinationEntry"
-                            Placeholder="Select Destination Airport"
-                            FontSize="18"
-                            FontFamily="sans-serif"
-                            TextColor="#333333"
-                            PlaceholderColor="#888888"
-                            Focused="OnDestinationFocused"
-                        TextChanged="OnAirportSearchTextChanged"/>
-
+                        <Entry Text="{Binding Destination}" Placeholder="Select Destination Airport"
+                               FontSize="18" FontFamily="sans-serif" TextColor="#333333"
+                               PlaceholderColor="#888888" Focused="OnDestinationFocused" TextChanged="OnAirportSearchTextChanged" />
                         <StackLayout Orientation="Horizontal" HorizontalOptions="EndAndExpand" Padding="0,0,0,30">
                             <ImageButton Source="help.png"
                                          HeightRequest="15" WidthRequest="15" MinimumHeightRequest="15" MinimumWidthRequest="15"
@@ -98,17 +74,12 @@
                     </StackLayout>
                 </Frame>
 
-                <ListView x:Name="AirportListDest"
-                          IsVisible="False" 
-                          ItemSelected="OnAirportSelected"
-                          BackgroundColor="White"
-                          SelectionMode="Single">
+                <ListView x:Name="AirportListDest" IsVisible="False" ItemSelected="OnAirportSelected"
+                          ItemsSource="{Binding AirportItems}" BackgroundColor="White" SelectionMode="Single">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                <ViewCell.View>
-                                    <Label Text="{Binding CityName}" TextColor="Black" VerticalOptions="Center" />
-                                </ViewCell.View>
+                                <Label Text="{Binding CityName}" TextColor="Black" VerticalOptions="Center" />
                             </ViewCell>
                         </DataTemplate>
                     </ListView.ItemTemplate>
@@ -118,16 +89,13 @@
                 <Frame BackgroundColor="White" Padding="5" HasShadow="True">
                     <StackLayout Orientation="Horizontal" Spacing="10">
                         <Image Source="calendar_icon.png" WidthRequest="25" HeightRequest="25" VerticalOptions="Center" />
-                        <DatePicker x:Name="DepartureDatePicker"
-                                    FontSize="18"
-                                    TextColor="#333333"
-                                    FontFamily="sans-serif"/>
+                        <DatePicker Date="{Binding DepartureDate}" FontSize="18" TextColor="#333333" FontFamily="sans-serif" />
                     </StackLayout>
                 </Frame>
 
                 <!-- Search Flight Button -->
                 <Button Text="Search Flight"
-                        Clicked="OnSearchFlightClicked"
+                        Command="{Binding SearchFlightCommand}"
                         BackgroundColor="#7ea3ab"
                         TextColor="White"
                         FontFamily="PlayWrite"
@@ -135,6 +103,7 @@
                         FontSize="16"
                         HeightRequest="50" />
 
+                <!-- Skip -->
                 <Label Text="Skip for now"
                        TextColor="Black"
                        FontSize="18"
@@ -143,114 +112,31 @@
                        HorizontalOptions="Center"
                        Margin="0,10,0,20">
                     <Label.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnSkipClicked"/>
+                        <TapGestureRecognizer Command="{Binding SkipCommand}" />
                     </Label.GestureRecognizers>
                 </Label>
 
-                <!-- Flight Details Section -->
-                <Frame Padding="15"
-                       BackgroundColor="#F5F5F5"
-                       HasShadow="True"
-                       CornerRadius="10"
-                       IsVisible="False"
-                       x:Name="FlightDetailsLayout">
+                <!-- Flight Details (Still handled in code-behind, optional to refactor later) -->
+                <Frame Padding="15" BackgroundColor="#F5F5F5" HasShadow="True" CornerRadius="10" IsVisible="False" x:Name="FlightDetailsLayout">
                     <StackLayout Spacing="10">
-                        <!-- Flight Info -->
-                        <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" VerticalOptions="CenterAndExpand">
-                            <Label x:Name="AirlineLabel"
-                                Grid.Row="0" Grid.ColumnSpan="3"
-                                Margin="0,-5,0,0"
-                                FontSize="16"
-                                FontAttributes="Bold"
-                                TextColor="#7ea3ab"
-                                HorizontalOptions="Center"
-                                Text="Airline Name"
-                                FontFamily="sans-serif"
-                                IsVisible="True"/>
-
-                            <Label Grid.Row="0" Grid.Column="0"
-                                   FontSize="16"
-                                   TextColor="Black"
-                                   FontAttributes="None"
-                                   HorizontalOptions="Start"
-                                   FontFamily="sans-serif"
-                                   Text="Boarding Time:" 
-                                   x:Name="DepartureTimeLabel" />
-
-                            <Label Grid.Row="0" Grid.Column="2"
-                                   FontSize="16"
-                                   TextColor="Black"
-                                   FontAttributes="None"
-                                   HorizontalOptions="End"
-                                   FontFamily="sans-serif"
-                                   Text="Arrival Time:" 
-                                   x:Name="ArrivalTimeLabel" />
-
-                            <!-- Origin IATA -->
-                            <Label x:Name ="OriginLabel"
-                                   Grid.Row="1" Grid.Column="0"
-                                   FontSize="24"
-                                   FontAttributes="Bold"
-                                   TextColor="#7ea3ab"
-                                   HorizontalOptions="Start"
-                                   FontFamily="sans-serif"
-                                   Text="Origin" />
-
-                            <Label x:Name ="DepartureDateLabel"
-                                Grid.Row="1" Grid.Column="0"
-                                FontSize="10"
-                                FontAttributes="Bold"
-                                TextColor="#7ea3ab"
-                                HorizontalOptions="Start"
-                                IsVisible="False"
-                                 />
-
-
-                            <!-- Line Between -->
-                            <BoxView Grid.Row="1" Grid.Column="1"
-                             HeightRequest="2"
-                             BackgroundColor="#7ea3ab"
-                             VerticalOptions="Center" />
-
-                            <!-- Destination IATA -->
-                            <Label x:Name="DestinationLabel"
-                                   Grid.Row="1" Grid.Column="2"
-                                   FontSize="24"
-                                   FontAttributes="Bold"
-                                   TextColor="#7ea3ab"
-                                   FontFamily="sans-serif"
-                                   HorizontalOptions="End"
-                                   Text="Destination" />
-
-                            <Label x:Name ="ArrivalDateLabel"
-                                   Grid.Row="2" Grid.Column="2"
-                                   FontSize="10"
-                                   FontAttributes="Bold"
-                                   TextColor="#7ea3ab"
-                                   HorizontalOptions="Start"
-                                   IsVisible="False"
-                                   />
-
-                            <!-- Flight Duration -->
-                            <Label x:Name="DurationLabel"
-                                   Grid.Row="4" Grid.Column="1"
-                                   FontSize="16"
-                                   TextColor="#606060"
-                                   HorizontalOptions="Center"
-                                   VerticalOptions="Center"
-                                   Margin="0,30,0,0"
-                                   FontFamily="sans-serif"
-                                   Text="Duration:" />
-
+                        <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto">
+                            <Label x:Name="AirlineLabel" Grid.Row="0" Grid.ColumnSpan="3" Margin="0,-5,0,0"
+                                   FontSize="16" FontAttributes="Bold" TextColor="#7ea3ab" HorizontalOptions="Center" Text="Airline Name" />
+                            <Label x:Name="DepartureTimeLabel" Grid.Row="0" Grid.Column="0" FontSize="16" TextColor="Black" Text="Boarding Time:" />
+                            <Label x:Name="ArrivalTimeLabel" Grid.Row="0" Grid.Column="2" FontSize="16" TextColor="Black" Text="Arrival Time:" />
+                            <Label x:Name="OriginLabel" Grid.Row="1" Grid.Column="0" FontSize="24" FontAttributes="Bold" TextColor="#7ea3ab" Text="Origin" />
+                            <Label x:Name="DepartureDateLabel" Grid.Row="1" Grid.Column="0" FontSize="10" TextColor="#7ea3ab" IsVisible="False" />
+                            <BoxView Grid.Row="1" Grid.Column="1" HeightRequest="2" BackgroundColor="#7ea3ab" VerticalOptions="Center" Margin="10,0,10,-7" />
+                            <Label x:Name="DestinationLabel" Grid.Row="1" Grid.Column="2" FontSize="24" FontAttributes="Bold" TextColor="#7ea3ab" Text="Destination" />
+                            <Label x:Name="ArrivalDateLabel" Grid.Row="2" Grid.Column="2" FontSize="10" TextColor="#7ea3ab" IsVisible="False" />
+                            <Label x:Name="DurationLabel" Grid.Row="4" Grid.Column="1" FontSize="16" TextColor="#606060" HorizontalOptions="Center" Text="Duration:" Margin="0,-5,0,0" />
                         </Grid>
                     </StackLayout>
-
-
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnFlightTapped" />
                     </Frame.GestureRecognizers>
-
                 </Frame>
+
             </StackLayout>
         </ScrollView>
     </Grid>

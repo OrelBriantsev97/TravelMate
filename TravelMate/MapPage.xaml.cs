@@ -13,9 +13,9 @@ using Mapsui;
 using Mapsui.Styles;
 using System;
 using System.Diagnostics;
-using System.Threading;
 using Microsoft.Maui.Dispatching;
 using TravelMate.Controls;
+using TravelMate.ViewModels;
 
 namespace TravelMate
 {
@@ -24,147 +24,89 @@ namespace TravelMate
         private readonly int userId;
         private List<Hotel> hotels = new();
         private List<Flight> flights = new();
+        private readonly MapViewModel viewModel;    
 
-        public MapPage(int userId,string destination)
+        public MapPage(int userId, string destination)
         {
             InitializeComponent();
             this.userId = userId;
-            var navBar = new NavigationBar(userId, destination);
-            NavigationContainer.Content = navBar;
-            SetupMap();
+
+            NavigationContainer.Content = new NavigationBar(userId, destination);
+
+            _ = SetupMapAsync(); // Start map setup
+            BindingContext = new MapViewModel(userId);
+
+            LoadMapWithSpinner();
         }
 
-        private async Task SetupMap()
+        private async Task LoadMapWithSpinner()
         {
-            var tileSource = new HttpTileSource(
-                new GlobalSphericalMercator(),
-                "https://tile.openstreetmap.org/{z}/{x}/{y}.png");
+            viewModel.IsLoading = true;
 
-            var tileLayer = new TileLayer(tileSource)
-            {
-                Name = "OpenStreetMap"
-            };
+            await Task.Delay(300); 
+
+            await SetupMapAsync();
+
+            viewModel.IsLoading = false;
+        }
+
+        private async Task SetupMapAsync()
+        {
+            var tileSource = new HttpTileSource(new GlobalSphericalMercator(), "https://tile.openstreetmap.org/{z}/{x}/{y}.png");
 
             mapView.Map = new Mapsui.Map();
-            mapView.Map.Layers.Add(tileLayer);
+            mapView.Map.Layers.Add(new TileLayer(tileSource) { Name = "OpenStreetMap" });
             mapView.Map.Navigator.ZoomTo(7);
-            mapView.Map.Home = n => n.ZoomTo(90);
+            mapView.Map.Home = n => n.ZoomTo(20);
 
             flights = await DatabaseHelper.GetFlightsByUserId(userId);
             hotels = await DatabaseHelper.GetHotelsByUserId(userId);
 
-            if (flights.Any() || hotels.Any())
+            if (hotels.Any())
             {
-                await Task.Delay(500);
-                MainThread.BeginInvokeOnMainThread(LoadTripOverview);
-                MainThread.BeginInvokeOnMainThread(LoadHotelPins);
-                Debug.WriteLine($"Number of layers: {mapView.Map.Layers.Count}");
-            }
-            else
-            {
-                await DisplayAlert("No Data", "No flights or hotels found.", "OK");
-            }
-        }
-
-        private void LoadTripOverview()
-        {
-            var tripEvents = new List<TripEvent>();
-
-            // Add flights to trip overview
-            foreach (var flight in flights)
-            {
-                if (DateTime.TryParse(flight.DepartureDate, out DateTime flightDate))
+                MainThread.BeginInvokeOnMainThread(() =>
                 {
-                    tripEvents.Add(new TripEvent
-                    {
-                        Date = flightDate,
-                        Icon = "✈️",
-                        Title = $"Flight {flight.FlightNumber}",
-                        Subtitle = $"{flightDate:MMM dd, yyyy} at {flight.DepartureTime:hh\\:mm tt}"
-                    });
-                }
+                    LoadHotelPins();
+                    ZoomToHotels();
+                });
             }
-
-            // Add hotels to trip overview
-            int hotelNumber = 1;
-            foreach (var hotel in hotels)
-            {
-                if (DateTime.TryParse(hotel.CheckInDate, out DateTime checkInDate) &&
-                    DateTime.TryParse(hotel.CheckOutDate, out DateTime checkOutDate))
-                {
-                    Debug.WriteLine($"Hotel: {hotel.HotelName}, Check-in: {hotel.CheckInDate}");
-                    tripEvents.Add(new TripEvent
-                    {
-                        Date = checkInDate,
-                        Icon = "🏕️",
-                        Title = $"{hotelNumber} → {hotel.HotelName}",
-                        Subtitle = $"Check In {checkInDate:MMM dd} → Check Out: {checkOutDate:MMM dd}"
-                    });
-                    hotelNumber++;
-                }
-            }
-
-            var sortedTripEvents = tripEvents.OrderBy(e => e.Date).ToList();
-
-            MainThread.BeginInvokeOnMainThread(() =>
-            {
-
-                tripOverviewCollectionView.ItemsSource = sortedTripEvents;
-            });
         }
 
         private void LoadHotelPins()
         {
-            if (!hotels.Any()) return;
-
             var pinLayer = new MemoryLayer("Hotel Pins")
             {
-                Features = hotels.Select((hotel, index) =>
+                Features = hotels.Select((hotel, i) =>
                 {
-                    var position = SphericalMercator.FromLonLat(hotel.Longitude, hotel.Latitude);
-                    var feature = new PointFeature(new MPoint(position.x, position.y));
-                    feature["Label"] = $"{index + 1} → {hotel.HotelName}";
+                    var pos = SphericalMercator.FromLonLat(hotel.Longitude, hotel.Latitude);
+                    var feature = new PointFeature(new MPoint(pos.x, pos.y));
+                    feature["Label"] = $"{i + 1} → {hotel.HotelName}";
                     return feature;
                 }).ToList(),
                 Style = new SymbolStyle
                 {
                     SymbolScale = 0.7,
                     Fill = new Mapsui.Styles.Brush(Mapsui.Styles.Color.Red),
-                    Outline = new Mapsui.Styles.Pen(Mapsui.Styles.Color.Black, 1)
+                    Outline = new Pen(Mapsui.Styles.Color.Black, 1)
                 }
             };
 
             mapView.Map.Layers.Add(pinLayer);
+        }
 
-            // Zoom to fit all pins
-            if (hotels.Any())
+        private void ZoomToHotels()
+        {
+            var allPoints = hotels.Select(h => SphericalMercator.FromLonLat(h.Longitude, h.Latitude)).ToList();
+            if (allPoints.Any())
             {
-                var allPoints = hotels.Select(h => SphericalMercator.FromLonLat(h.Longitude, h.Latitude)).ToList();
-                var boundingBox = new MRect(
+                var bounds = new MRect(
                     allPoints.Min(p => p.x), allPoints.Min(p => p.y),
-                    allPoints.Max(p => p.x), allPoints.Max(p => p.y)
-                );
-
-                mapView.Map.Navigator.ZoomToBox(boundingBox);
+                    allPoints.Max(p => p.x), allPoints.Max(p => p.y));
+                mapView.Map.Navigator.ZoomToBox(bounds);
             }
         }
 
-        private void ZoomIn(object sender, EventArgs e)
-        {
-            mapView.Map.Navigator.ZoomIn();
-        }
-
-        private void ZoomOut(object sender, EventArgs e)
-        {
-            mapView.Map.Navigator.ZoomOut();
-        }
-    }
-
-    public class TripEvent
-    {
-        public DateTime Date { get; set; }
-        public string Icon { get; set; } 
-        public string Title { get; set; } 
-        public string Subtitle { get; set; }
+        private void ZoomIn(object sender, EventArgs e) => mapView.Map.Navigator.ZoomIn();
+        private void ZoomOut(object sender, EventArgs e) => mapView.Map.Navigator.ZoomOut();
     }
 }

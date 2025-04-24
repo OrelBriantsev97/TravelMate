@@ -21,7 +21,7 @@
                                     <Image Source="{Binding LogoUrl}" WidthRequest="330" HeightRequest="70" Aspect="AspectFill"/>
                                     <Label Text="{Binding HotelName}" FontAttributes="Bold" FontFamily="Chi" 
                                            TextColor="#3b6069" FontSize="18"/>
-                                    <Label Text="{Binding Address}" TextColor="Gray" FontSize="14"/>
+                                    <Label Text="{Binding DisplayAddress}" TextColor="Gray" FontSize="14"/>
                                     <Label Text="{Binding CheckInDate, StringFormat='Check-in: {0:yyyy-MM-dd}'}" 
                                            TextColor="Gray" FontSize="14"/>
                                     <Label Text="{Binding CheckOutDate, StringFormat='Check-out: {0:yyyy-MM-dd}'}" 

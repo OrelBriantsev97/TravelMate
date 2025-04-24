@@ -10,7 +10,7 @@ namespace TravelMate
     {
         public int userId { get; set; }
 
-        public MyFlightsPage(int userID,string destination)
+        public MyFlightsPage(int userID, string destination)
         {
             InitializeComponent();
             userId = userID;
@@ -23,21 +23,31 @@ namespace TravelMate
         {
             try
             {
-                var flights = await DatabaseHelper.GetFlightsByUserId(userId); // Replace with actual DB call
+                var flights = await DatabaseHelper.GetFlightsByUserId(userId);
 
-                // Sort flights by departure date and time
-                var sortedFlights = flights.OrderBy(f => f.DepartureTime).ToList();
+                // Combine DepartureDate and DepartureTime into DateTime for proper sorting
+                var sortedFlights = flights
+                    .Select(f =>
+                    {
+                        DateTime.TryParse($"{f.DepartureDate} {f.DepartureTime}", out DateTime fullDateTime);
+                        return new { Flight = f, FullDateTime = fullDateTime };
+                    })
+                    .OrderBy(f => f.FullDateTime)
+                    .Select(f => f.Flight)
+                    .ToList();
+
                 FlightsListView.ItemsSource = sortedFlights;
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"An error occurred while loading hotels: {ex.Message}", "OK");
+                await DisplayAlert("Error", $"An error occurred while loading flights: {ex.Message}", "OK");
             }
         }
 
+
         private void addFlight(object sender, EventArgs e)
         {
-             Navigation.PushAsync(new NewFlightPage(userId));
+            Navigation.PushAsync(new NewFlightPage(userId));
         }
     }
 }

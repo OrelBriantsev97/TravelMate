@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿
+using Newtonsoft.Json;
 using System;
 using System.Net.Http;
 using System.Text;
@@ -6,14 +7,22 @@ using System.Threading.Tasks;
 
 namespace TravelMate.Services
 {
+    // Provides functionality to send transactional emails via the SendPulse API.
     public class EmailService
     {
-        private const string ApiUserId = "b064f3200a2883c533da0ae6ae0f0ea0";  // Replace with your API User ID
-        private const string ApiSecret = "3d02e0948a8483daaa1c5ff6dae02180";  // Replace with your API Secret
+
+        private const string ApiUserId = "b064f3200a2883c533da0ae6ae0f0ea0"; 
+        private const string ApiSecret = "3d02e0948a8483daaa1c5ff6dae02180";  
 
         private const string SendPulseApiUrl = "https://api.sendpulse.com";
         private static readonly HttpClient _httpClient = new HttpClient();
 
+        // Sends an email to the specified recipient. If param "isPasswordReset" is true,
+        // a 6-digit PIN code for password reset is included in the body.
+        // <param name="toEmail">The recipient's email address.</param>
+        // <param name="subject">The email subject line.</param>
+        // <param name="isPasswordReset">Determines if the email is for password reset (includes PIN).</param>
+        // <returns>True if the email was sent successfully; otherwise, false.</returns>
         public async Task<bool> SendEmailAsync(string toEmail, string subject, bool isPasswordReset = false)
         {
             try
@@ -66,6 +75,8 @@ namespace TravelMate.Services
             }
         }
 
+        // Generates a random 6-digit PIN code for password reset.
+        // <returns> A string representation of the 6-digit PIN.</returns>
         private string GeneratePinCode()
         {
             Random rand = new Random();
@@ -73,6 +84,8 @@ namespace TravelMate.Services
             return pinCode.ToString();
         }
 
+        // Authenticates with SendPulse and retrieves an OAuth access token.
+        //<returns>The access token string if successful; otherwise, an empty string.</returns>
         private async Task<string> GetAccessToken()
         {
             try
@@ -100,6 +113,10 @@ namespace TravelMate.Services
             }
         }
 
+        // Sends the prepared email payload to the SendPulse SMTP API.
+        /// <param name="accessToken">The OAuth access token.</param>
+        /// <param name="emailData">An object representing the email payload.</param>
+        /// <returns>True if the HTTP call succeeded; otherwise, false.</returns>
         private async Task<bool> SendEmailAsync(string accessToken, object emailData)
         {
             try

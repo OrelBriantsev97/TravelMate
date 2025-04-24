@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:TravelMate.Controls"
              x:Class="TravelMate.CurrencyConverterPage"
@@ -8,44 +7,45 @@
 
     <Grid RowDefinitions="*, Auto">
         <VerticalStackLayout Grid.Row="0" Padding="20" Spacing="15" Margin="0,70,0,0">
-            <Label Text="Currency Converter"
-                   FontSize="30"
-                   FontFamily ="sans-serif" 
-                   FontAttributes="Bold"
-                   HorizontalOptions="Center"
-                   TextColor="#32545c"/>
+            <Label Text="Currency Converter" FontSize="30"
+                   FontFamily="sans-serif" FontAttributes="Bold"
+                   HorizontalOptions="Center" TextColor="#32545c"/>
 
-           
-            <Label Text="Insert amound and select currencies" FontSize="20" FontAttributes="Bold" TextColor="#3b6069"
-               HorizontalOptions="Center"  FontFamily="Chi"/>
+            <Label Text="Insert amount and select currencies"
+                   FontSize="20" FontAttributes="Bold" TextColor="#3b6069"
+                   HorizontalOptions="Center" FontFamily="Chi"/>
 
-
-            <Frame Padding="10" BackgroundColor="White" CornerRadius="10" HasShadow="True" Margin="0,10,0,0">
-                <Entry x:Name="AmountEntry"
-                       Placeholder="Enter amount"
-                       FontFamily ="sans-serif"
+            <Label Text="Amount" FontSize="18" FontAttributes="Bold" TextColor="#3b6069"
+                    HorizontalOptions="Start" FontFamily="Chi" Margin="0,15,0,-15"/>
+            <Frame Padding="10" BackgroundColor="White" CornerRadius="10" HasShadow="True">
+                <Entry Placeholder="Enter amount"
+                       FontFamily="sans-serif"
                        Keyboard="Numeric"
                        FontSize="18"
-                       TextChanged="OnAmountChanged"/>
+                       Text="{Binding Amount, Mode=TwoWay}"/>
             </Frame>
 
+            <Label Text="From" FontSize="18" FontAttributes="Bold" TextColor="#3b6069"
+        HorizontalOptions="Start" FontFamily="Chi" Margin="0,0,0,-15"/>
             <Frame Padding="10" BackgroundColor="White" CornerRadius="10" HasShadow="True">
-                <Picker x:Name="FromCurrencyPicker" FontFamily="sans-serif"
-            Title="From Currency"
-            FontSize="18"
-            SelectedIndexChanged="OnCurrencyChanged"/>
+                <Picker Title="From Currency"
+                        FontFamily="sans-serif"
+                        FontSize="18"
+                        ItemsSource="{Binding CurrencyList}"
+                        SelectedItem="{Binding SelectedFrom}" />
             </Frame>
 
+            <Label Text="To" FontSize="18" FontAttributes="Bold" TextColor="#3b6069"
+HorizontalOptions="Start" FontFamily="Chi" Margin="0,0,0,-15"/>
             <Frame Padding="10" BackgroundColor="White" CornerRadius="10" HasShadow="True">
-                <Picker x:Name="ToCurrencyPicker" FontFamily="sans-serif"
-            Title="To Currency"
-            FontSize="18"
-            SelectedIndexChanged="OnCurrencyChanged"/>
+                <Picker Title="To Currency"
+                        FontFamily="sans-serif"
+                        FontSize="18"
+                        ItemsSource="{Binding CurrencyList}"
+                        SelectedItem="{Binding SelectedTo}" />
             </Frame>
 
-
-            <Label x:Name="ConvertedAmountLabel"
-                   Text="Converted Amount"
+            <Label Text="{Binding ConvertedResult}"
                    FontSize="22"
                    FontFamily="sans-serif"
                    FontAttributes="Bold"
@@ -55,12 +55,11 @@
             <Button Text="Refresh Rates"
                     FontSize="16"
                     BackgroundColor="#32545c"
-                    FontFamily ="PlayWrite"
+                    FontFamily="PlayWrite"
                     TextColor="White"
-                    Clicked="OnRefreshRatesClicked"
+                    Command="{Binding RefreshCommand}"
                     CornerRadius="10"
                     Padding="10"/>
-
         </VerticalStackLayout>
 
         <Grid Grid.Row="2">

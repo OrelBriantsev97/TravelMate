@@ -10,13 +10,12 @@
 
         <!-- 🟢 Top Section: Destination Image & Countdown -->
         <Grid Grid.Row="0">
-            <Image x:Name="DestinationImage"
+            <Image Source="{Binding DestinationImage}"
                    Aspect="AspectFill"
                    HeightRequest="200"/>
 
             <StackLayout Padding="10" VerticalOptions="End">
-                <Label x:Name="cityNameLabel"
-                       Text="Loading..."
+                <Label Text="{Binding CityName}"
                        FontSize="Large"
                        TextColor="White"
                        FontFamily="PlayWrite"
@@ -24,12 +23,12 @@
             </StackLayout>
 
             <StackLayout VerticalOptions="End" HorizontalOptions="End">
-                <Label x:Name="countdownLabel" Text="Loading..."
-                        FontSize="Medium" TextColor="white" 
-                        FontFamily="PlayWrite" FontAttributes="Bold"/>
-                <Label x:Name="departureLabel" Text="Days   hours  minutes"
-                        FontSize="Small" TextColor="White"
-                        FontFamily="PlayWrite" FontAttributes="Bold"/>
+                <Label Text="{Binding CountdownText}"
+                       FontSize="Medium" TextColor="White"
+                       FontFamily="PlayWrite" FontAttributes="Bold"/>
+                <Label Text="{Binding DepartureLabel}"
+                       FontSize="Small" TextColor="White"
+                       FontFamily="PlayWrite" FontAttributes="Bold"/>
             </StackLayout>
         </Grid>
 
@@ -38,17 +37,17 @@
             <VerticalStackLayout Spacing="10">
 
                 <!-- Hotels Carousel -->
-                <CarouselView x:Name="HotelView" ItemsSource="{Binding Hotels}" ItemsLayout="Horizontal"
-                              Scrolled="HotelScrolled" Loop="False" HeightRequest="220">
+                <CarouselView ItemsSource="{Binding Hotels}" ItemsLayout="Horizontal"
+                              Loop="False" HeightRequest="220">
                     <CarouselView.ItemTemplate>
                         <DataTemplate>
                             <Frame BackgroundColor="White" CornerRadius="10" Margin="0" Padding="20" HasShadow="True"
                                    WidthRequest="360" HeightRequest="190">
                                 <StackLayout Spacing="0">
-                                    <Image Source="{Binding LogoUrl}" WidthRequest="330" HeightRequest="70"  Aspect="AspectFill"/>
+                                    <Image Source="{Binding LogoUrl}" WidthRequest="330" HeightRequest="70" Aspect="AspectFill"/>
                                     <Label Text="{Binding HotelName}" FontAttributes="Bold" TextColor="#3b6069" FontSize="16"/>
-                                    <Label Text="{Binding Address}" TextColor="Gray"/>
-                                    <Label Text="{Binding Phone}" TextColor="Gray"/>
+                                    <Label Text="{Binding DisplayAddress}" TextColor="Gray"/>
+                                    <Label Text="{Binding DisplayPhone}" TextColor="Gray"/>
                                 </StackLayout>
                             </Frame>
                         </DataTemplate>
@@ -56,7 +55,8 @@
                 </CarouselView>
 
                 <!-- View All Hotels Button -->
-                <Button Text="View All Hotels" Clicked="ShowHotels"
+                <Button Text="View All Hotels"
+                        Command="{Binding ShowHotelsCommand}"
                         BackgroundColor="#32545c" TextColor="White"
                         HorizontalOptions="Center" FontFamily="PlayWrite" FontSize="12" FontAttributes="Bold"
                         WidthRequest="150" HeightRequest="30" Margin="0,-15,0,0"
@@ -67,54 +67,52 @@
 
                     <!-- 🟢 First Row: Map & Weather -->
                     <Frame Grid.Row="0" Grid.Column="0" HeightRequest="150" WidthRequest="150" CornerRadius="10" Padding="5"
-                            BackgroundColor="#7CB3BE" HasShadow="True" Margin="10,-27,0,0">
+                           BackgroundColor="#7CB3BE" HasShadow="True" Margin="10,-27,0,0">
                         <StackLayout>
                             <Label Text="Map" FontSize="14" FontAttributes="Bold" TextColor="Black" HorizontalOptions="Center" />
                             <Image Source="map_icon.png" HeightRequest="100" WidthRequest="100" Margin="0,5,0,0">
                                 <Image.GestureRecognizers>
-                                    <TapGestureRecognizer Tapped="ShowMap"/>
+                                    <TapGestureRecognizer Command="{Binding ShowMapCommand}" />
                                 </Image.GestureRecognizers>
                             </Image>
                         </StackLayout>
                     </Frame>
 
-                    <Frame Grid.Row="0" Grid.Column="1" x:Name="WeatherFrame" Padding="10" CornerRadius="10" HasShadow="True"
-           WidthRequest="180" HeightRequest="180" BackgroundColor="#B0D9E0" Margin="0,-5,10,0">
+                    <Frame Grid.Row="0" Grid.Column="1" Padding="10" CornerRadius="10" HasShadow="True"
+                           WidthRequest="180" HeightRequest="180" BackgroundColor="#B0D9E0" Margin="0,-5,10,0">
                         <StackLayout HorizontalOptions="Center">
-                            <Label x:Name="WeatherCity" FontSize="14" FontAttributes="Bold" TextColor="Black"/>
-                            <Image x:Name="WeatherIcon" WidthRequest="50" HeightRequest="50"/>
-                            <Label x:Name="WeatherTemp" FontSize="16" TextColor="Black"/>
+                            <Label Text="{Binding WeatherCity}" FontSize="14" FontAttributes="Bold" TextColor="Black"/>
+                            <Image Source="{Binding WeatherIcon}" WidthRequest="50" HeightRequest="50"/>
+                            <Label Text="{Binding WeatherTemp}" FontSize="16" TextColor="Black"/>
                         </StackLayout>
                     </Frame>
 
                     <!-- 🟢 Second Row: Checklist & Currency Converter -->
                     <Frame Grid.Row="1" Grid.Column="0" HeightRequest="110" WidthRequest="150" CornerRadius="10" Padding="5"
-           BackgroundColor="#D6F1F8" HasShadow="True" Margin="10,-7,0,0">
+                           BackgroundColor="#D6F1F8" HasShadow="True" Margin="10,-7,0,0">
                         <StackLayout>
                             <Label Text="Checklist" FontSize="14" FontAttributes="Bold" TextColor="Black" HorizontalOptions="Center"/>
                             <Image Source="checklist_icon.png" HeightRequest="60" WidthRequest="60">
                                 <Image.GestureRecognizers>
-                                    <TapGestureRecognizer Tapped="OnChecklistClicked"/>
+                                    <TapGestureRecognizer Command="{Binding ShowChecklistCommand}" />
                                 </Image.GestureRecognizers>
                             </Image>
                         </StackLayout>
                     </Frame>
 
                     <Frame Grid.Row="1" Grid.Column="1" HeightRequest="90" WidthRequest="180" CornerRadius="10" Padding="5"
-           BackgroundColor="#548C99" HasShadow="True" Margin="-5,15,0,0">
+                           BackgroundColor="#548C99" HasShadow="True" Margin="-5,15,0,0">
                         <StackLayout>
                             <Label Text="Currency Converter" FontSize="14" FontAttributes="Bold" TextColor="Black" HorizontalOptions="Center"/>
                             <Image Source="convert_icon.png" HeightRequest="60" WidthRequest="60">
                                 <Image.GestureRecognizers>
-                                    <TapGestureRecognizer Tapped="OnConvertClicked"/>
+                                    <TapGestureRecognizer Command="{Binding ShowConverterCommand}" />
                                 </Image.GestureRecognizers>
                             </Image>
                         </StackLayout>
                     </Frame>
 
                 </Grid>
-            
-
             </VerticalStackLayout>
         </Grid>
 
