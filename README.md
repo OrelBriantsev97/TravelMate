@@ -1,13 +1,5 @@
 # TravelMate
 
-![TravelMate Demo](./TravelMateAd.gif)
-
-> **Meet TravelMate—your pocket travel pro.**  
-> Plan flights and hotels in a tap, visualize your route on an auto-zooming map, check off your packing list and convert currency live.  
-> Download TravelMate free on Android and make every trip effortless!
-
----
-
 ## Overview
 
 TravelMate is a smart travel planning app designed to help users organize their trips by consolidating all flights and hotel reservations in one place. The app provides an interactive travel experience by displaying trips on a map based on check-in dates and travel routes. It also includes essential features such as budget calculation, offline mode, and secure document storage for boarding passes and passports.
@@ -15,7 +7,7 @@ TravelMate is a smart travel planning app designed to help users organize their 
 ## Demo Video
 
  watch the ad here:  
-[▶️ Watch on GitHub Pages](https://yourusername.github.io/TravelMate/TravelMateAd.mp4)
+[▶️ Watch on GitHub Pages](https://github.com/OrelBriantsev97/TravelMate/releases/tag/v1.0.0/TravelMateAd.mp4)
 
 ---
 
