@@ -15,10 +15,8 @@ TravelMate is a smart travel planning app designed to help users organize their 
 
 - **Unified Travel Management:** Combine and manage all flights and hotel bookings in one app.  
 - **Interactive Trip Map:** View your travel route on a map according to check-in dates.  
-- **Budget Calculator:** Track travel expenses and plan your budget effectively.  
-- **Offline Mode:** Access trip details without an internet connection.  
-- **Secure Document Storage:** Upload and store boarding passes, passports, and other important travel documents.  
-- **Multi-Language Support:** Ensure accessibility for users worldwide.  
+- **Offline Mode:** Access trip details without an internet connection.
+-  **Useful Travel Features:** Currency converter, current weather updates, restaurant/bar/attraction recommendations, and a trip checklist.
 
 ## Technology Stack
 
@@ -26,11 +24,10 @@ TravelMate is a smart travel planning app designed to help users organize their 
 - **Mobile UI:** .NET MAUI (XAML)  
 - **Desktop UI:** WPF (XAML)  
 - **Database:** SQLite (sqlite-net-pcl, Code-First Migrations)  
-- **Map:** Mapsui + BruTile  
+- **Map:** Mapsui
 - **Charts:** LiveChartsCore + SkiaSharp  
 - **Excel Export:** ClosedXML  
 
-> *Note: The code is still in development, and features may change or expand as the project progresses.*
 
 ## Getting Started
 
