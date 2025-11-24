@@ -11,8 +11,8 @@ namespace TravelMate.Services
     public class EmailService
     {
 
-        private const string ApiUserId = "b064f3200a2883c533da0ae6ae0f0ea0"; 
-        private const string ApiSecret = "3d02e0948a8483daaa1c5ff6dae02180";  
+        private const string ApiUserId = ""; 
+        private const string ApiSecret = "";  
 
         private const string SendPulseApiUrl = "https://api.sendpulse.com";
         private static readonly HttpClient _httpClient = new HttpClient();
