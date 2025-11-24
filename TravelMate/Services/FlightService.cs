@@ -10,7 +10,7 @@ namespace TravelMate.Services
     /// The FlightService class provides functionality for retrieving flight details from the Google Flights API using SERP API
     public static class FlightService
     {
-        private const string ApiKey = "90a7e3bc24bfeb081ad2f4bab00f252e396a3b555b066ad6b71b4809d1d23a60";
+        private const string ApiKey = "";
         private const string ApiUrl = "https://serpapi.com/search?engine=google_flights";
 
         /// Retrieves flight details based on the specified flight number, origin, destination, and departure time.
