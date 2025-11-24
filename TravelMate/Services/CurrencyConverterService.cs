@@ -9,7 +9,7 @@ namespace TravelMate.Services
     // from the ExchangeRate-API for a given base currency.
     public class CurrencyConverterService
     {
-        private const string ApiKey = "047873fe9f6621de7e117e0e";
+        private const string ApiKey = "";
         private const string BaseUrl = "https://v6.exchangerate-api.com/v6/";
 
         // Retrieves a dictionary of exchange rates relative to the specified base currency.
