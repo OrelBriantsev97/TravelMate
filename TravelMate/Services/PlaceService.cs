@@ -12,7 +12,7 @@ namespace TravelMate.Services
     /// for a given user and destination.
     public class PlaceService
     {
-        private const string ApiKey = "90a7e3bc24bfeb081ad2f4bab00f252e396a3b555b066ad6b71b4809d1d23a60";
+        private const string ApiKey = "";
         private const string BaseUrl = "https://serpapi.com/search.json";
 
         // Gets a list of places for the specified user, destination, and type.
