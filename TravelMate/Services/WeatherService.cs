@@ -10,7 +10,7 @@ namespace TravelMate.Services
     public static class WeatherService
     {
         private static readonly HttpClient _httpClient = new HttpClient();
-        private const string ApiKey = "R9E3B83PHVA6XFK8XDH8STPLF";
+        private const string ApiKey = "";
         private const string BaseUrl = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline";
 
         // Retrieves the current day's temperature and resolved address for a given location.
